@@ -5,6 +5,7 @@ import com.myEdu.ws.model.Course;
 import com.myEdu.ws.model.GeneralAssessment;
 import com.myEdu.ws.repository.CourseRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -53,12 +54,16 @@ public class CourseService {
         return (course != null) ? course.getCourseName() + " - " + course.getCode() : null;
     }
 
-    public void updateCourse(Long courseId, CourseDto courseDto) {
-        Optional<Course> optional = courseRepository.findById(courseId);
-        if(optional.isPresent()){
-            Course course = optional.get();
-            course.setSemester(courseDto.getSemester() != null ? courseDto.getSemester() : course.getSemester());
-        }
+
+    public Course updateCourse(Long courseId, Course updatedCourse) {
+        Course existingCourse = courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalArgumentException("Course not found with id: " + courseId));
+
+        // Güncellenmiş verileri mevcut kursa kopyala
+        BeanUtils.copyProperties(updatedCourse, existingCourse, "courseId");
+
+        // Kursu güncelle ve kaydet
+        return courseRepository.save(existingCourse);
     }
 
     public void deleteCourse(Long courseId) {

@@ -33,8 +33,13 @@ public class CourseController {
     }
 
     @PutMapping("/{courseId}")
-    public void updateCourse(@PathVariable Long courseId, @RequestBody CourseDto courseDto) {
-        courseService.updateCourse(courseId, courseDto);
+    public ResponseEntity<Course> updateCourse(@PathVariable Long courseId, @RequestBody Course updatedCourse) {
+        try {
+            Course updated = courseService.updateCourse(courseId, updatedCourse);
+            return new ResponseEntity<>(updated, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping("/create-course")
