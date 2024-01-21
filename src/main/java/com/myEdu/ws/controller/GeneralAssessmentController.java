@@ -1,9 +1,10 @@
 package com.myEdu.ws.controller;
 
+import com.myEdu.ws.dto.GeneralAssessmentRequest;
 import com.myEdu.ws.model.Course;
-import com.myEdu.ws.model.GeneralAssesment;
+import com.myEdu.ws.model.GeneralAssessment;
 import com.myEdu.ws.repository.CourseRepository;
-import com.myEdu.ws.service.GeneralAssesmentService;
+import com.myEdu.ws.service.GeneralAssessmentService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,26 +15,32 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/generalAssesment")
-public class GeneralAssesmentController {
+public class GeneralAssessmentController {
 
-    private final GeneralAssesmentService generalAssesmentService;
+    private final GeneralAssessmentService generalAssesmentService;
     private final CourseRepository courseRepository;
 
     @Autowired
-    public GeneralAssesmentController(GeneralAssesmentService generalAssesmentService, CourseRepository courseRepository) {
+    public GeneralAssessmentController(GeneralAssessmentService generalAssesmentService, CourseRepository courseRepository) {
         this.generalAssesmentService = generalAssesmentService;
         this.courseRepository = courseRepository;
     }
 
     @PostMapping("/create-generalAssesment")
-    public GeneralAssesment addGeneralAssesment(@RequestBody GeneralAssesment generalAssesment) {
-        Course course = generalAssesment.getCourse();
-        if (generalAssesmentService.isTotalContributionUnderLimit(course, generalAssesment.getTotalContribution())) {
-            return generalAssesmentService.addGeneralAssesment(generalAssesment);
+    public ResponseEntity<GeneralAssessment> addGeneralAssesment(@RequestBody GeneralAssessmentRequest request) {
+        Long courseId = request.getCourseId();
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + courseId));
+
+        GeneralAssessment generalAssessment = new GeneralAssessment();
+        generalAssessment.setCourse(course);
+        generalAssessment.setName(request.getName());
+        generalAssessment.setTotalContribution(request.getTotalContribution());
+
+        if (generalAssesmentService.isTotalContributionUnderLimit(course, generalAssessment.getTotalContribution())) {
+            GeneralAssessment savedGeneralAssessment = generalAssesmentService.addGeneralAssesment(generalAssessment);
+            return new ResponseEntity<>(savedGeneralAssessment, HttpStatus.CREATED);
         } else {
-            // Toplam değerlendirme katkısının limiti aşıldı
-            // Burada yapılacak işlemi belirleyebilirsiniz, örneğin hata mesajı döndürebilir veya istenilen işlemi yapabilirsiniz.
-            // Örnek olarak:
             throw new IllegalArgumentException("Toplam değerlendirme katkısı limiti aşıldı!");
         }
     }
@@ -44,9 +51,9 @@ public class GeneralAssesmentController {
     }
 
     @GetMapping("/get-generalAssesmentById")
-    public GeneralAssesment getGeneralAssesmentById(@PathVariable("id") long generalAssesmentId) {
+    public GeneralAssessment getGeneralAssesmentById(@PathVariable("id") long generalAssesmentId) {
         return generalAssesmentService.findGeneralAssesmentById(generalAssesmentId)
-                .orElseThrow(() -> new EntityNotFoundException("GeneralAssesment not found with id: " + generalAssesmentId));
+                .orElseThrow(() -> new EntityNotFoundException("GeneralAssessment not found with id: " + generalAssesmentId));
     }
 
     @PutMapping("/updateTotalContributionForCourse/{courseId}")

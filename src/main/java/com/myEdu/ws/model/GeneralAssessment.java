@@ -1,10 +1,12 @@
 package com.myEdu.ws.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.util.List;
 
 @Entity
 @Table
@@ -12,12 +14,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GeneralAssesment {
+public class GeneralAssessment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long generalAssesmentId;
 
+    @Getter
     @Column
     private String name;
 
@@ -26,5 +29,10 @@ public class GeneralAssesment {
 
     @ManyToOne
     @JoinColumn(name= "courseId")
+    @JsonIgnore
     private Course course;
+
+    @OneToMany(mappedBy = "generalAssessment")
+    private List<Assessment> assessments;
+
 }

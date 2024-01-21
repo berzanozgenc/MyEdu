@@ -2,7 +2,7 @@ package com.myEdu.ws.service;
 
 import com.myEdu.ws.dto.CourseDto;
 import com.myEdu.ws.model.Course;
-import com.myEdu.ws.model.GeneralAssesment;
+import com.myEdu.ws.model.GeneralAssessment;
 import com.myEdu.ws.repository.CourseRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,13 +37,13 @@ public class CourseService {
         course.setSection(courseDto.getSection());
         course.setSemester(courseDto.getSemester());
 
-        GeneralAssesment generalAssesment = new GeneralAssesment();
-        generalAssesment.setName("quiz");
-        generalAssesment.setTotalContribution(20d);
-        generalAssesment.setCourse(course);
-        List<GeneralAssesment> generalAssesmentList = new ArrayList<>();
-        generalAssesmentList.add(generalAssesment);
-        course.setGeneralAssesment(generalAssesmentList);
+        GeneralAssessment generalAssessment = new GeneralAssessment();
+        generalAssessment.setName("quiz");
+        generalAssessment.setTotalContribution(20d);
+        generalAssessment.setCourse(course);
+        List<GeneralAssessment> generalAssessmentList = new ArrayList<>();
+        generalAssessmentList.add(generalAssessment);
+        course.setGeneralAssessment(generalAssessmentList);
 
        return courseRepository.save(course).getCourseId();
     }

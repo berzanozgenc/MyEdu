@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.util.List;
 
 @Table
@@ -39,5 +38,8 @@ public class Course {
     private int section;
 
     @OneToMany(mappedBy = "course")
-    private List<GeneralAssesment> generalAssesment;
+    private List<GeneralAssessment> generalAssessment;
+
+    @OneToMany(mappedBy = "course")
+    private List<LearningOutcome> learningOutcome;
 }
