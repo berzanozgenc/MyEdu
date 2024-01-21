@@ -25,7 +25,11 @@ public class AssessmentLearningOutcomeContributionController {
     }
 
     @DeleteMapping("/{contributionId}")
-    public ResponseEntity<Void> deleteContribution(@PathVariable Long contributionId) {
+    public ResponseEntity<Void> deleteAssessmentLearningOutcomeContribution(@PathVariable Long contributionId) {
+        if (contributionId == null) {
+            // Handle null case, e.g., return a ResponseEntity with a proper status
+            return ResponseEntity.badRequest().build();
+        }
         contributionService.deleteAssessmentLearningOutcomeContribution(contributionId);
         return ResponseEntity.noContent().build();
     }

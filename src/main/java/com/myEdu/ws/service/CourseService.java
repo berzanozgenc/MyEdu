@@ -48,6 +48,11 @@ public class CourseService {
        return courseRepository.save(course).getCourseId();
     }
 
+    public String getCourseNameAndCodeById(Long courseId) {
+        Course course = courseRepository.findById(courseId).orElse(null);
+        return (course != null) ? course.getCourseName() + " - " + course.getCode() : null;
+    }
+
     public void updateCourse(Long courseId, CourseDto courseDto) {
         Optional<Course> optional = courseRepository.findById(courseId);
         if(optional.isPresent()){

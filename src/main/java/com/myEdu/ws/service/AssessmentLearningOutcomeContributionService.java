@@ -7,6 +7,7 @@ import com.myEdu.ws.model.LearningOutcome;
 import com.myEdu.ws.repository.AssessmentLearningOutcomeContributionRepository;
 import com.myEdu.ws.repository.AssessmentRepository;
 import com.myEdu.ws.repository.LearningOutcomeRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,8 +45,15 @@ public class AssessmentLearningOutcomeContributionService {
     }
 
     public void deleteAssessmentLearningOutcomeContribution(Long contributionId) {
-        contributionRepository.deleteById(contributionId);
+        Optional<AssessmentLearningOutcomeContribution> contributionOptional = contributionRepository.findById(contributionId);
+        if (contributionOptional.isPresent()) {
+            contributionRepository.deleteById(contributionId);
+        } else {
+            // Handle case where contribution with given id is not found
+            throw new EntityNotFoundException("Contribution with id " + contributionId + " not found");
+        }
     }
+
 
     public AssessmentLearningOutcomeContribution updateContributionValue(Long contributionId, Double newContribution) {
         AssessmentLearningOutcomeContribution contribution = contributionRepository.findById(contributionId)
