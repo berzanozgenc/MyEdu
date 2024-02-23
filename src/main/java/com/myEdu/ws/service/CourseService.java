@@ -70,4 +70,8 @@ public class CourseService {
         Optional<Course> optional = courseRepository.findById(courseId);
         optional.ifPresent(course -> courseRepository.delete(course));
     }
+
+    public List<Course> getAllCourses() {
+        return courseRepository.findAll();
+    }
 }

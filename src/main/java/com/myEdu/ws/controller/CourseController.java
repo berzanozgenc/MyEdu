@@ -20,16 +20,10 @@ public class CourseController {
 
     private CourseService courseService;
 
-    @GetMapping("/get-all-courses-name-and-code")
-    public ResponseEntity<CourseNameAndCodeDto> getAllCourseNameAndCode() {
-        CourseNameAndCodeDto dto = new CourseNameAndCodeDto();
-        dto.setCoursesNameAndCode(courseService.getAllCourseNameAndCode());
-        return new ResponseEntity<>(dto, HttpStatus.OK);
-    }
-
-    @GetMapping("/{courseId}/nameAndCode")
-    public String getCourseNameAndCodeById(@PathVariable Long courseId) {
-        return courseService.getCourseNameAndCodeById(courseId);
+    @GetMapping("/get-courses")
+    public ResponseEntity<List<Course>> getAllCourses() {
+        List<Course> courses = courseService.getAllCourses();
+        return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
     @PutMapping("/{courseId}")
