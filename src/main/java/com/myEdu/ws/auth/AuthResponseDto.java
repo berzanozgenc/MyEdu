@@ -1,6 +1,6 @@
-package com.myEdu.ws.dto;
+package com.myEdu.ws.auth;
 
-import com.myEdu.ws.token.Token;
+import com.myEdu.ws.dto.UserDto;
 import lombok.Getter;
 import lombok.Setter;
 

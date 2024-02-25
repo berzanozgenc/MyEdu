@@ -1,12 +1,9 @@
-package com.myEdu.ws.service;
+package com.myEdu.ws.auth;
 
-import com.myEdu.ws.dto.AuthDto;
-import com.myEdu.ws.dto.AuthResponseDto;
 import com.myEdu.ws.dto.UserDto;
 import com.myEdu.ws.model.User;
 import com.myEdu.ws.exception.AuthenticationException;
-import com.myEdu.ws.token.Token;
-import com.myEdu.ws.token.TokenService;
+import com.myEdu.ws.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;

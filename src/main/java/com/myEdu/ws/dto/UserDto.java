@@ -16,6 +16,7 @@ import lombok.Setter;
 @Setter
 public class UserDto {
 
+    private long userId;
     private String email;
     private String password;
     private String firstName;
@@ -23,6 +24,12 @@ public class UserDto {
     private int statusCode;
 
     public UserDto(User inDB) {
+        this.userId = inDB.getUserId();
+        this.email = inDB.getEmail();
+        this.password = inDB.getPassword();
+        this.firstName = inDB.getFirstName();
+        this.lastName = inDB.getLastName();
+        this.statusCode = inDB.getStatusCode();
     }
 }
 

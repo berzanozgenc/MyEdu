@@ -1,4 +1,4 @@
-package com.myEdu.ws.token;
+package com.myEdu.ws.auth;
 
 public record Token(String prefix ,String token) {
 

@@ -1,6 +1,5 @@
-package com.myEdu.ws.token;
+package com.myEdu.ws.auth;
 
-import com.myEdu.ws.dto.AuthDto;
 import com.myEdu.ws.model.User;
 
 public interface TokenService {

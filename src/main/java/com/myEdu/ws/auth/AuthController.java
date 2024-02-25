@@ -1,9 +1,6 @@
-package com.myEdu.ws.controller;
+package com.myEdu.ws.auth;
 
-import com.myEdu.ws.dto.AuthDto;
-import com.myEdu.ws.dto.AuthResponseDto;
 import com.myEdu.ws.exception.AuthenticationException;
-import com.myEdu.ws.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
