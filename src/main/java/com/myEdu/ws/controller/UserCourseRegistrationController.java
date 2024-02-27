@@ -2,6 +2,7 @@ package com.myEdu.ws.controller;
 
 import com.myEdu.ws.dto.UserCourseRegistrationRequest;
 import com.myEdu.ws.model.Course;
+import com.myEdu.ws.model.UserCourseRegistration;
 import com.myEdu.ws.service.UserCourseRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,9 +35,10 @@ public class UserCourseRegistrationController {
     }
 
     @GetMapping("/user/{userId}/courses")
-    public ResponseEntity<List<Course>> getCoursesByUserId(@PathVariable Long userId) {
-        List<Course> courses = userCourseRegistrationService.getCoursesByUserId(userId);
-        return ResponseEntity.ok(courses);
+    public ResponseEntity<List<UserCourseRegistration>> getUserCourseRegistrationsByUserId(@PathVariable Long userId) {
+        List<UserCourseRegistration> registrations = userCourseRegistrationService.getUserCourseRegistrationsByUserId(userId);
+        return ResponseEntity.ok(registrations);
     }
+
 
 }

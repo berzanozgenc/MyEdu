@@ -54,16 +54,8 @@ public class UserCourseRegistrationService {
     }
 
     @Transactional
-    public List<Course> getCoursesByUserId(Long userId) {
-        List<UserCourseRegistration> registrations = userCourseRegistrationRepository.findByUserUserId(userId);
-        List<Course> courses = registrations.stream()
-                .map(UserCourseRegistration::getCourse)
-                .collect(Collectors.toList());
-        return courses;
+    public List<UserCourseRegistration> getUserCourseRegistrationsByUserId(Long userId) {
+        return userCourseRegistrationRepository.findByUserUserId(userId);
     }
-
-
-
-
 }
 
