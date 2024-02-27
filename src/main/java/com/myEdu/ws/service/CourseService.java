@@ -49,11 +49,10 @@ public class CourseService {
        return courseRepository.save(course).getCourseId();
     }
 
-    public String getCourseNameAndCodeById(Long courseId) {
-        Course course = courseRepository.findById(courseId).orElse(null);
-        return (course != null) ? course.getCourseName() + " - " + course.getCode() : null;
+    public Course getCourseById(Long courseId) {
+        return courseRepository.findById(courseId)
+                .orElse(null);
     }
-
 
     public Course updateCourse(Long courseId, Course updatedCourse) {
         Course existingCourse = courseRepository.findById(courseId)
