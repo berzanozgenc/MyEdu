@@ -53,6 +53,10 @@ public class GeneralAssessmentService {
         return generalAssesmentRepository.findById(generalAssesmentId);
     }
 
+    public List<GeneralAssessment> getGeneralAssessmentsByCourseId(Long courseId) {
+        return generalAssesmentRepository.findByCourse_courseId(courseId);
+    }
+
     public Optional<GeneralAssessment> findById(Long id) {
         return generalAssesmentRepository.findById(id);
     }

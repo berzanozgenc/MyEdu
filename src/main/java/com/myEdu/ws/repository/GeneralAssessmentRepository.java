@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface GeneralAssessmentRepository extends JpaRepository<GeneralAssessment, Long> {
     List<GeneralAssessment> findByCourse(Course course);
+    List<GeneralAssessment> findByCourse_courseId(Long courseId);
 }

@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -67,5 +68,16 @@ public class GeneralAssessmentController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course with ID: " + courseId + " not found");
         }
     }
+
+    @GetMapping("/course/{courseId}/general-assessments")
+    public ResponseEntity<List<GeneralAssessment>> getGeneralAssessmentsByCourseId(@PathVariable Long courseId) {
+        try {
+            List<GeneralAssessment> generalAssessments = generalAssesmentService.getGeneralAssessmentsByCourseId(courseId);
+            return new ResponseEntity<>(generalAssessments, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 }
