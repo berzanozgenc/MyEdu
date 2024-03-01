@@ -19,30 +19,24 @@ public class GeneralAssessmentService {
         this.generalAssesmentRepository = generalAssesmentRepository;
     }
 
-    public boolean isTotalContributionUnderLimit(Course course, double newAssessmentContribution) {
+    private boolean isContributionUnderLimit(double totalContribution) {
+        return totalContribution <= 100.0;
+    }
+
+    public GeneralAssessment addGeneralAssessment(GeneralAssessment generalAssessment) {
+        Course course = generalAssessment.getCourse();
         List<GeneralAssessment> assessmentsForCourse = generalAssesmentRepository.findByCourse(course);
         double totalContribution = assessmentsForCourse.stream()
                 .mapToDouble(GeneralAssessment::getTotalContribution)
                 .sum();
 
-        System.out.println(totalContribution + newAssessmentContribution);
-
-        if (totalContribution + newAssessmentContribution <= 100.0) {
-            return true;
-        } else {
-            throw new IllegalArgumentException("Toplam değerlendirme katkısı limiti aşıldı!");
-        }
-    }
-
-    public GeneralAssessment addGeneralAssesment(GeneralAssessment generalAssessment) {
-        Course course = generalAssessment.getCourse();
-
-        if (isTotalContributionUnderLimit(course, generalAssessment.getTotalContribution())) {
+        if (isContributionUnderLimit(totalContribution + generalAssessment.getTotalContribution())) {
             return generalAssesmentRepository.save(generalAssessment);
         } else {
             throw new IllegalArgumentException("Toplam değerlendirme katkısı limiti aşıldı!");
         }
     }
+
 
 
     public void deleteGeneralAssesmentById(long generalAssesmentId) {
@@ -65,22 +59,27 @@ public class GeneralAssessmentService {
         return generalAssesmentRepository.findAll();
     }
 
-    public void updateTotalContributionForCourse(Course course, long generalAssesmentId, double newAssesmentContribution) {
-        Optional<GeneralAssessment> existingAssessment = generalAssesmentRepository.findById(generalAssesmentId);
+    public void updateTotalContributionForCourse(Course course, long generalAssessmentId, double newAssessmentContribution) {
+        Optional<GeneralAssessment> existingAssessment = generalAssesmentRepository.findById(generalAssessmentId);
 
         if (existingAssessment.isPresent()) {
             GeneralAssessment assessmentToUpdate = existingAssessment.get();
-            double currentContribution = assessmentToUpdate.getTotalContribution();
+            List<GeneralAssessment> assessmentsForCourse = generalAssesmentRepository.findByCourse(course);
+            double totalContribution = assessmentsForCourse.stream()
+                    .mapToDouble(GeneralAssessment::getTotalContribution)
+                    .sum();
 
-            if (isTotalContributionUnderLimit(course, currentContribution - assessmentToUpdate.getTotalContribution() + newAssesmentContribution)) {
+            // Eski değerlendirmenin katkısını toplamdan çıkar
+            totalContribution -= assessmentToUpdate.getTotalContribution();
 
-                assessmentToUpdate.setTotalContribution(newAssesmentContribution);
+            if (isContributionUnderLimit(totalContribution + newAssessmentContribution)) {
+                assessmentToUpdate.setTotalContribution(newAssessmentContribution);
                 generalAssesmentRepository.save(assessmentToUpdate);
             } else {
                 throw new IllegalArgumentException("Toplam değerlendirme katkısı limiti aşıldı!");
             }
         } else {
-            throw new EntityNotFoundException("GeneralAssessment not found with id: " + generalAssesmentId);
+            throw new EntityNotFoundException("GeneralAssessment not found with id: " + generalAssessmentId);
         }
     }
 }

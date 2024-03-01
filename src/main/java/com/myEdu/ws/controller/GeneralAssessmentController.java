@@ -28,21 +28,12 @@ public class GeneralAssessmentController {
     }
 
     @PostMapping("/create-generalAssesment")
-    public ResponseEntity<GeneralAssessment> addGeneralAssesment(@RequestBody GeneralAssessmentRequest request) {
-        Long courseId = request.getCourseId();
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + courseId));
-
-        GeneralAssessment generalAssessment = new GeneralAssessment();
-        generalAssessment.setCourse(course);
-        generalAssessment.setName(request.getName());
-        generalAssessment.setTotalContribution(request.getTotalContribution());
-
-        if (generalAssesmentService.isTotalContributionUnderLimit(course, generalAssessment.getTotalContribution())) {
-            GeneralAssessment savedGeneralAssessment = generalAssesmentService.addGeneralAssesment(generalAssessment);
-            return new ResponseEntity<>(savedGeneralAssessment, HttpStatus.CREATED);
-        } else {
-            throw new IllegalArgumentException("Toplam değerlendirme katkısı limiti aşıldı!");
+    public ResponseEntity<Object> addGeneralAssessment(@RequestBody GeneralAssessment generalAssessment) {
+        try {
+            GeneralAssessment addedAssessment = generalAssesmentService.addGeneralAssessment(generalAssessment);
+            return ResponseEntity.ok(addedAssessment);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
