@@ -28,9 +28,9 @@ public class GeneralAssessmentController {
     }
 
     @PostMapping("/create-generalAssesment")
-    public ResponseEntity<Object> addGeneralAssessment(@RequestBody GeneralAssessment generalAssessment) {
+    public ResponseEntity<Object> addGeneralAssessment(@RequestBody GeneralAssessmentRequest request) {
         try {
-            GeneralAssessment addedAssessment = generalAssesmentService.addGeneralAssessment(generalAssessment);
+            GeneralAssessment addedAssessment = generalAssesmentService.addGeneralAssessment(request.getCourseId(), request.getName(), request.getTotalContribution());
             return ResponseEntity.ok(addedAssessment);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

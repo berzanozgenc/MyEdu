@@ -2,6 +2,7 @@ package com.myEdu.ws.service;
 
 import com.myEdu.ws.model.Course;
 import com.myEdu.ws.model.GeneralAssessment;
+import com.myEdu.ws.repository.CourseRepository;
 import com.myEdu.ws.repository.GeneralAssessmentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,31 +14,36 @@ import java.util.Optional;
 public class GeneralAssessmentService {
 
     private final GeneralAssessmentRepository generalAssesmentRepository;
+    private final CourseRepository courseRepository;
 
     @Autowired
-    public GeneralAssessmentService(GeneralAssessmentRepository generalAssesmentRepository) {
+    public GeneralAssessmentService(GeneralAssessmentRepository generalAssesmentRepository, CourseRepository courseRepository) {
         this.generalAssesmentRepository = generalAssesmentRepository;
+        this.courseRepository = courseRepository;
     }
 
     private boolean isContributionUnderLimit(double totalContribution) {
         return totalContribution <= 100.0;
     }
 
-    public GeneralAssessment addGeneralAssessment(GeneralAssessment generalAssessment) {
-        Course course = generalAssessment.getCourse();
+    public GeneralAssessment addGeneralAssessment(Long courseId, String name, double totalContribution) {
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + courseId));
+
         List<GeneralAssessment> assessmentsForCourse = generalAssesmentRepository.findByCourse(course);
-        double totalContribution = assessmentsForCourse.stream()
+        double totalContributionForCourse = assessmentsForCourse.stream()
                 .mapToDouble(GeneralAssessment::getTotalContribution)
                 .sum();
 
-        if (isContributionUnderLimit(totalContribution + generalAssessment.getTotalContribution())) {
+        if (isContributionUnderLimit(totalContributionForCourse + totalContribution)) {
+            GeneralAssessment generalAssessment = new GeneralAssessment();
+            generalAssessment.setCourse(course);
+            generalAssessment.setName(name);
+            generalAssessment.setTotalContribution(totalContribution);
             return generalAssesmentRepository.save(generalAssessment);
         } else {
             throw new IllegalArgumentException("Toplam değerlendirme katkısı limiti aşıldı!");
         }
     }
-
-
 
     public void deleteGeneralAssesmentById(long generalAssesmentId) {
         generalAssesmentRepository.deleteById(generalAssesmentId);
