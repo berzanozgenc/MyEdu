@@ -42,6 +42,9 @@ public class LearningOutcomeService {
         return learningOutcomeRepository.save(learningOutcome);
     }
 
+    public List<LearningOutcome> getByCourseId(Long courseId) {
+        return learningOutcomeRepository.findByCourseId(courseId);
+    }
 
     public LearningOutcome updateLearningOutcome(Long id, LearningOutcome updatedLearningOutcome) {
         LearningOutcome existingLearningOutcome = learningOutcomeRepository.findById(id)

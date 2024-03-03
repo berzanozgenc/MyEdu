@@ -24,6 +24,12 @@ public class LearningOutcomeController {
         return new ResponseEntity<>(learningOutcomes, HttpStatus.OK);
     }
 
+    @GetMapping("/course/{courseId}")
+    public ResponseEntity<List<LearningOutcome>> getLearningOutcomesByCourseId(@PathVariable Long courseId) {
+        List<LearningOutcome> learningOutcomes = learningOutcomeService.getByCourseId(courseId);
+        return ResponseEntity.ok().body(learningOutcomes);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<LearningOutcome> getLearningOutcomeById(@PathVariable Long id) {
         Optional<LearningOutcome> learningOutcome = learningOutcomeService.getLearningOutcomeById(id);
