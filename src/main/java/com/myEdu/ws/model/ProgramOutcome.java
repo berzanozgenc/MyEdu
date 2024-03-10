@@ -18,6 +18,6 @@ public class ProgramOutcome {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String description;
-    private String department;
+    private String department;//eklendi
 
 }
