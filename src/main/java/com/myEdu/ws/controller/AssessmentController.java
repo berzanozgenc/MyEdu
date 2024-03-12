@@ -77,6 +77,11 @@ public class AssessmentController {
         assessmentService.deleteAssessmentById(assessmentId);
     }
 
+    @GetMapping("/generalAssessment/{generalAssessmentId}")
+    public List<Assessment> getAssessmentsByGeneralAssessmentId(@PathVariable Long generalAssessmentId) {
+        return assessmentService.getAssessmentsByGeneralAssessmentId(generalAssessmentId);
+    }
+
     @PutMapping("/update-assessment-contribution/{id}")
     public ResponseEntity<String> updateAssessmentContribution(@PathVariable long id, @RequestParam Double newContribution) {
         assessmentService.updateAssessmentContribution(id, newContribution);

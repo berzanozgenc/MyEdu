@@ -62,6 +62,9 @@ public class AssessmentService {
         }
     }
 
+    public List<Assessment> getAssessmentsByGeneralAssessmentId(Long generalAssessmentId) {
+        return assessmentRepository.findByGeneralAssessment_GeneralAssesmentId(generalAssessmentId);
+    }
     public void updateAssessmentContribution(Long id, Double newContribution) {
         Optional<Assessment> optionalAssessment = assessmentRepository.findById(id);
 

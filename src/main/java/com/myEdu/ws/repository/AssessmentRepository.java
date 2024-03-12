@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface AssessmentRepository extends JpaRepository<Assessment, Long> {
     List<Assessment> findByGeneralAssessment(GeneralAssessment generalAssessment);
+    List<Assessment> findByGeneralAssessment_GeneralAssesmentId(Long generalAssesmentId);
+
 }
