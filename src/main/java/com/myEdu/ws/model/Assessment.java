@@ -50,7 +50,7 @@ public class Assessment {
 
             List<Assessment> assessments = generalAssessment.getAssessments();
             int newNumber = assessments.size() + 1;
-            name = baseName + " " + newNumber;
+            name = baseName;
         }
     }
 
