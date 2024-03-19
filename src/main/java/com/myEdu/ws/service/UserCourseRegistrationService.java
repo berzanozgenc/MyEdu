@@ -48,6 +48,12 @@ public class UserCourseRegistrationService {
         userCourseRegistrationRepository.save(userCourseRegistration);
     }
 
+    @Transactional(readOnly = true)
+    public boolean isAnotherUserAlreadyRegisteredForCourse(Long userId, Long courseId) {
+        return !userCourseRegistrationRepository.findByCourseCourseId(courseId).isEmpty()
+                && !userCourseRegistrationRepository.existsByUserUserIdAndCourseCourseId(userId, courseId);
+    }
+
     @Transactional
     public void deleteUserCourseRegistration(Long registrationId) {
         userCourseRegistrationRepository.deleteById(registrationId);

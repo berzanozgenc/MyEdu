@@ -24,6 +24,12 @@ public class UserCourseRegistrationController {
 
     @PostMapping
     public ResponseEntity<String> createUserCourseRegistration(@RequestBody UserCourseRegistrationRequest request) {
+        // Check if another user is already registered for the course
+        if (userCourseRegistrationService.isAnotherUserAlreadyRegisteredForCourse(request.getUserId(), request.getCourseId())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Another user is already registered for the course");
+        }
+
+        // If another user is not registered, proceed with creating the registration
         userCourseRegistrationService.createUserCourseRegistration(request.getUserId(), request.getCourseId());
         return ResponseEntity.status(HttpStatus.CREATED).body("User course registration created successfully");
     }
