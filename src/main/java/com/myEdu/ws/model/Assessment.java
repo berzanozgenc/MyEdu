@@ -43,7 +43,7 @@ public class Assessment {
             if (lowerCaseGeneralAssessmentName.equals("vize") ||
                     lowerCaseGeneralAssessmentName.equals("final") ||
                     lowerCaseGeneralAssessmentName.equals("midterm")) {
-                baseName = "Soru";
+                baseName = baseNameBeforeLowerCase;
             } else {
                 baseName = baseNameBeforeLowerCase;
             }
