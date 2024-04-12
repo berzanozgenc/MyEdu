@@ -1,5 +1,6 @@
 package com.myEdu.ws.service;
 
+import com.myEdu.ws.model.Assessment;
 import com.myEdu.ws.model.Course;
 import com.myEdu.ws.model.GeneralAssessment;
 import com.myEdu.ws.repository.CourseRepository;
@@ -55,6 +56,22 @@ public class GeneralAssessmentService {
 
     public List<GeneralAssessment> getGeneralAssessmentsByCourseId(Long courseId) {
         return generalAssesmentRepository.findByCourse_courseId(courseId);
+    }
+
+    public boolean isGeneralAssessmentQuestionBased(Long generalAssessmentId){
+        GeneralAssessment generalAssessment = generalAssesmentRepository.findById(generalAssessmentId).orElse(null);
+        if(generalAssessment != null){
+            return generalAssessment.isQuestionBased();
+        }
+        return false;
+    }
+
+    public void toggleQuestionBased(Long generalAssessmentId) {
+        GeneralAssessment generalAssessment = generalAssesmentRepository.findById(generalAssessmentId).orElse(null);
+        if (generalAssessment != null) {
+            generalAssessment.setQuestionBased(!generalAssessment.isQuestionBased());
+            generalAssesmentRepository.save(generalAssessment);
+        }
     }
 
     public Optional<GeneralAssessment> findById(Long id) {

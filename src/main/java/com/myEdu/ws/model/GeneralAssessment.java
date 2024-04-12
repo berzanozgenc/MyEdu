@@ -27,6 +27,9 @@ public class GeneralAssessment {
     @Column
     private Double totalContribution;
 
+    @Column
+    private boolean questionBased = false;
+
     @ManyToOne
     @JoinColumn(name= "courseId")
     @JsonIgnore

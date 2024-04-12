@@ -37,6 +37,18 @@ public class GeneralAssessmentController {
         }
     }
 
+    @GetMapping("/{generalAssessmentId}/isQuestionBased")
+    public ResponseEntity<Boolean> isGeneralAssessmentQuestionBased(@PathVariable Long generalAssessmentId) {
+        boolean isQuestionBased = generalAssesmentService.isGeneralAssessmentQuestionBased(generalAssessmentId);
+        return new ResponseEntity<>(isQuestionBased, HttpStatus.OK);
+    }
+
+    @PutMapping("/{generalAssessmentId}/toggleQuestionBased")
+    public ResponseEntity<String> toggleQuestionBased(@PathVariable Long generalAssessmentId) {
+        generalAssesmentService.toggleQuestionBased(generalAssessmentId);
+        return new ResponseEntity<>("Question based toggled successfully", HttpStatus.OK);
+    }
+
     @DeleteMapping("/delete-generalAssesment/{id}")
     public void deleteGeneralAssesment(@PathVariable("id") long generalAssesmentId) {
         generalAssesmentService.deleteGeneralAssesmentById(generalAssesmentId);
