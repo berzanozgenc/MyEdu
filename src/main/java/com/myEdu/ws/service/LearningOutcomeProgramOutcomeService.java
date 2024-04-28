@@ -57,4 +57,15 @@ public class LearningOutcomeProgramOutcomeService {
         }
         return null;
     }
+
+    // Belirli bir learning outcome ve program outcome ID'sine göre contribution değerini getirme
+    public Double getContributionByOutcomeIds(Long learningOutcomeId, Long programOutcomeId) {
+        LearningOutcomeProgramOutcome relationship = learningOutcomeProgramOutcomeRepository.findByLearningOutcomeIdAndProgramOutcomeId(learningOutcomeId, programOutcomeId);
+        if (relationship != null) {
+            return relationship.getContribution();
+        } else {
+            return null;
+        }
+    }
+
 }

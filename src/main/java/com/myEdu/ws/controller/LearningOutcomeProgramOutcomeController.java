@@ -47,4 +47,15 @@ public class LearningOutcomeProgramOutcomeController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // Belirli bir learning outcome ve program outcome ID'sine göre contribution değerini getirme (GET)
+    @GetMapping("/contribution")
+    public ResponseEntity<Double> getContributionByOutcomeIds(@RequestParam Long learningOutcomeId, @RequestParam Long programOutcomeId) {
+        Double contribution = learningOutcomeProgramOutcomeService.getContributionByOutcomeIds(learningOutcomeId, programOutcomeId);
+        if (contribution != null) {
+            return ResponseEntity.ok(contribution);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
