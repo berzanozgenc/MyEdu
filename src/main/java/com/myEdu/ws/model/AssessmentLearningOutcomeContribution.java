@@ -1,9 +1,13 @@
 package com.myEdu.ws.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "Assessment_LearningOutcome_Contribution")
 @NoArgsConstructor
 public class AssessmentLearningOutcomeContribution {

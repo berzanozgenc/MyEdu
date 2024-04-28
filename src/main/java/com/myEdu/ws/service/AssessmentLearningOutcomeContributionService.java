@@ -54,7 +54,6 @@ public class AssessmentLearningOutcomeContributionService {
         }
     }
 
-
     public AssessmentLearningOutcomeContribution updateContributionValue(Long contributionId, Double newContribution) {
         AssessmentLearningOutcomeContribution contribution = contributionRepository.findById(contributionId)
                 .orElseThrow(() -> new NotFoundException("Contribution not found with id: " + contributionId));
@@ -63,4 +62,14 @@ public class AssessmentLearningOutcomeContributionService {
 
         return contributionRepository.save(contribution);
     }
+
+    public Double getContributionByLearningOutcomeAndAssessment(Long learningOutcomeId, Long assessmentId) {
+        AssessmentLearningOutcomeContribution contribution =
+                contributionRepository.findByLearningOutcomeIdAndAssessmentAssessmentId(learningOutcomeId, assessmentId);
+        if (contribution != null) {
+            return contribution.getContribution();
+        }
+        return null; // Contribution not found
+    }
+
 }

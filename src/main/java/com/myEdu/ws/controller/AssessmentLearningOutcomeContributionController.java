@@ -42,4 +42,14 @@ public class AssessmentLearningOutcomeContributionController {
                 contributionService.updateContributionValue(contributionId, request.getNewContribution());
         return ResponseEntity.ok(updatedContribution);
     }
+
+    @GetMapping("/contribution")
+    public ResponseEntity<Double> getContributionByLearningOutcomeAndAssessment(
+            @RequestParam Long learningOutcomeId,
+            @RequestParam Long assessmentId) {
+        Double contribution = contributionService.getContributionByLearningOutcomeAndAssessment(
+                learningOutcomeId, assessmentId);
+        return ResponseEntity.ok(contribution);
+    }
+
 }
