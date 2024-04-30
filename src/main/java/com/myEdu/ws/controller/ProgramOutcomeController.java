@@ -1,6 +1,7 @@
 package com.myEdu.ws.controller;
 
 import com.myEdu.ws.model.ProgramOutcome;
+import com.myEdu.ws.service.ProgramOutcomeCalculationService;
 import com.myEdu.ws.service.ProgramOutcomeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,10 +15,12 @@ import java.util.Optional;
 @RequestMapping("/program-outcomes")
 public class ProgramOutcomeController {
 
+    private final ProgramOutcomeCalculationService programOutcomeCalculationService;
     private final ProgramOutcomeService programOutcomeService;
 
     @Autowired
-    public ProgramOutcomeController(ProgramOutcomeService programOutcomeService) {
+    public ProgramOutcomeController(ProgramOutcomeCalculationService programOutcomeCalculationService, ProgramOutcomeService programOutcomeService) {
+        this.programOutcomeCalculationService = programOutcomeCalculationService;
         this.programOutcomeService = programOutcomeService;
     }
 
@@ -58,5 +61,15 @@ public class ProgramOutcomeController {
     public ResponseEntity<Void> deleteProgramOutcome(@PathVariable Long id) {
         programOutcomeService.deleteProgramOutcome(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/calculate-and-set-target")
+    public ResponseEntity<Double> calculateAndSetTarget(@PathVariable Long id) {
+        ProgramOutcome programOutcome = programOutcomeService.findById(id);
+        if (programOutcome == null) {
+            return ResponseEntity.notFound().build();
+        }
+        programOutcomeService.calculateAndSetProgramOutcomeTarget(programOutcome);
+        return ResponseEntity.ok(programOutcome.getTarget());
     }
 }

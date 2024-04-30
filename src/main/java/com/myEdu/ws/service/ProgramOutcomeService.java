@@ -12,10 +12,18 @@ import java.util.Optional;
 public class ProgramOutcomeService {
 
     private final ProgramOutcomeRepository programOutcomeRepository;
+    private final ProgramOutcomeCalculationService programOutcomeCalculationService;
 
     @Autowired
-    public ProgramOutcomeService(ProgramOutcomeRepository programOutcomeRepository) {
+    public ProgramOutcomeService(ProgramOutcomeRepository programOutcomeRepository, ProgramOutcomeCalculationService programOutcomeCalculationService) {
         this.programOutcomeRepository = programOutcomeRepository;
+        this.programOutcomeCalculationService = programOutcomeCalculationService;
+    }
+
+    public void calculateAndSetProgramOutcomeTarget(ProgramOutcome programOutcome) {
+        double target = programOutcomeCalculationService.calculateProgramOutcomeTarget(programOutcome);
+        programOutcome.setTarget(target);
+        programOutcomeRepository.save(programOutcome);
     }
 
     // Tüm program çıktılarını getir
@@ -42,6 +50,10 @@ public class ProgramOutcomeService {
             // Belirli bir ID ile program çıktısı bulunamazsa null dönebilir veya isteğe göre bir hata işleme stratejisi uygulanabilir
             return null;
         }
+    }
+
+    public ProgramOutcome findById(Long id) {
+        return programOutcomeRepository.findById(id).orElse(null);
     }
 
     // Program çıktısını sil

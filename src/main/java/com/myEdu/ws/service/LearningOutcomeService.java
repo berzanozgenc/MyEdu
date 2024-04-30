@@ -37,6 +37,7 @@ public class LearningOutcomeService {
 
         LearningOutcome learningOutcome = new LearningOutcome();
         learningOutcome.setDescription(request.getDescription());
+        learningOutcome.setDesiredTarget(request.getDesiredTarget());
         learningOutcome.setCourse(course);
 
         return learningOutcomeRepository.save(learningOutcome);
@@ -51,6 +52,7 @@ public class LearningOutcomeService {
                 .orElseThrow(() -> new NotFoundException("LearningOutcome not found with id: " + id));
 
         existingLearningOutcome.setDescription(updatedLearningOutcome.getDescription());
+        existingLearningOutcome.setDesiredTarget(updatedLearningOutcome.getDesiredTarget());
 
         return learningOutcomeRepository.save(existingLearningOutcome);
     }

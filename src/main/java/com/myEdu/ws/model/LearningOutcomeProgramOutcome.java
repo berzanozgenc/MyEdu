@@ -1,13 +1,17 @@
 package com.myEdu.ws.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "learning_outcome_program_outcome")
+@AllArgsConstructor
+@NoArgsConstructor
 public class LearningOutcomeProgramOutcome {
 
     @Id

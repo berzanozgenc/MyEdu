@@ -20,6 +20,9 @@ public class LearningOutcome {
 
     private String description;
 
+    @Column(nullable = true)
+    private double desiredTarget;
+
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "courseId")

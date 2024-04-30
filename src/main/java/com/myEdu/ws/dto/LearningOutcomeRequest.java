@@ -9,5 +9,6 @@ public class LearningOutcomeRequest {
 
     private String description;
     private Long courseId;
+    private double desiredTarget;
 
 }
