@@ -6,6 +6,7 @@ import com.myEdu.ws.model.LearningOutcome;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -15,4 +16,7 @@ public interface AssessmentLearningOutcomeContributionRepository
     Optional<AssessmentLearningOutcomeContribution> findByAssessmentAndLearningOutcome(
             Assessment assessment, LearningOutcome learningOutcome);
     AssessmentLearningOutcomeContribution findByLearningOutcomeIdAndAssessmentAssessmentId(Long learningOutcomeId, Long assessmentId);
+
+    List<AssessmentLearningOutcomeContribution> findByLearningOutcome(LearningOutcome learningOutcome);
+
 }

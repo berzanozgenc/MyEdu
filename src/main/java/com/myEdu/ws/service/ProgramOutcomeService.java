@@ -1,6 +1,9 @@
 package com.myEdu.ws.service;
 
+import com.myEdu.ws.model.LearningOutcome;
+import com.myEdu.ws.model.LearningOutcomeProgramOutcome;
 import com.myEdu.ws.model.ProgramOutcome;
+import com.myEdu.ws.repository.LearningOutcomeProgramOutcomeRepository;
 import com.myEdu.ws.repository.ProgramOutcomeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,11 +16,13 @@ public class ProgramOutcomeService {
 
     private final ProgramOutcomeRepository programOutcomeRepository;
     private final ProgramOutcomeCalculationService programOutcomeCalculationService;
+    private final LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository;
 
     @Autowired
-    public ProgramOutcomeService(ProgramOutcomeRepository programOutcomeRepository, ProgramOutcomeCalculationService programOutcomeCalculationService) {
+    public ProgramOutcomeService(ProgramOutcomeRepository programOutcomeRepository, ProgramOutcomeCalculationService programOutcomeCalculationService, LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository) {
         this.programOutcomeRepository = programOutcomeRepository;
         this.programOutcomeCalculationService = programOutcomeCalculationService;
+        this.learningOutcomeProgramOutcomeRepository = learningOutcomeProgramOutcomeRepository;
     }
 
     public void calculateAndSetProgramOutcomeTarget(ProgramOutcome programOutcome) {
@@ -60,4 +65,19 @@ public class ProgramOutcomeService {
     public void deleteProgramOutcome(Long id) {
         programOutcomeRepository.deleteById(id);
     }
+
+    public void calculateAndSetAssessmentValueForProgramOutcome(ProgramOutcome programOutcome) {
+        List<LearningOutcomeProgramOutcome> mappings = learningOutcomeProgramOutcomeRepository.findByProgramOutcome(programOutcome);
+        double assessmentValue = 0.0;
+        for (LearningOutcomeProgramOutcome mapping : mappings) {
+            LearningOutcome learningOutcome = mapping.getLearningOutcome();
+            double contribution = mapping.getContribution();
+            double learningOutcomeAssessmentSum = learningOutcome.getAssessmentSum();
+            double valueToAdd = (learningOutcomeAssessmentSum * contribution) / 100;
+            assessmentValue += valueToAdd;
+        }
+        programOutcome.setAssessmentValue(assessmentValue);
+        programOutcomeRepository.save(programOutcome);
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.myEdu.ws.controller;
 
 import com.myEdu.ws.model.ProgramOutcome;
+import com.myEdu.ws.repository.ProgramOutcomeRepository;
 import com.myEdu.ws.service.ProgramOutcomeCalculationService;
 import com.myEdu.ws.service.ProgramOutcomeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,13 @@ public class ProgramOutcomeController {
     private final ProgramOutcomeCalculationService programOutcomeCalculationService;
     private final ProgramOutcomeService programOutcomeService;
 
+    private final ProgramOutcomeRepository programOutcomeRepository;
+
     @Autowired
-    public ProgramOutcomeController(ProgramOutcomeCalculationService programOutcomeCalculationService, ProgramOutcomeService programOutcomeService) {
+    public ProgramOutcomeController(ProgramOutcomeCalculationService programOutcomeCalculationService, ProgramOutcomeService programOutcomeService, ProgramOutcomeRepository programOutcomeRepository) {
         this.programOutcomeCalculationService = programOutcomeCalculationService;
         this.programOutcomeService = programOutcomeService;
+        this.programOutcomeRepository = programOutcomeRepository;
     }
 
     // Tüm program çıktılarını getir
@@ -71,5 +75,15 @@ public class ProgramOutcomeController {
         }
         programOutcomeService.calculateAndSetProgramOutcomeTarget(programOutcome);
         return ResponseEntity.ok(programOutcome.getTarget());
+    }
+
+    @PutMapping("/{id}/calculate-and-set-assessment-value")
+    public ResponseEntity<String> calculateAndSetAssessmentValueForProgramOutcome(@PathVariable Long id) {
+        ProgramOutcome programOutcome = programOutcomeRepository.findById(id).orElse(null);
+        if (programOutcome == null) {
+            return ResponseEntity.notFound().build();
+        }
+        programOutcomeService.calculateAndSetAssessmentValueForProgramOutcome(programOutcome);
+        return ResponseEntity.ok("Assessment value calculated and set successfully for ProgramOutcome with ID: " + id);
     }
 }

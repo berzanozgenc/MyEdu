@@ -23,6 +23,10 @@ public class LearningOutcome {
     @Column(nullable = true)
     private double desiredTarget;
 
+    @Column(nullable = true)
+    private double assessmentSum;
+
+
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "courseId")

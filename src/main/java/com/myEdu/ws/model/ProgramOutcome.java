@@ -23,4 +23,8 @@ public class ProgramOutcome {
     @Column(nullable = true)
     private double target;
 
+    @Column(nullable = true)
+    private double assessmentValue;
+
+
 }

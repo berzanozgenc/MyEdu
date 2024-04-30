@@ -39,7 +39,7 @@ public class AssessmentController {
         Double totalContribution = assessmentService.getTotalContributionByGeneralAssessment(generalAssessment);
 
         // Yeni eklenmek istenen contribution ile toplamın ne kadar olacağını kontrol et
-        if (totalContribution + newContribution <= 100.0) {
+        if (totalContribution + newContribution <= 1000.0) {
             Assessment assessment = new Assessment();
             assessment.setName(request.getName());
             assessment.setContribution(newContribution);

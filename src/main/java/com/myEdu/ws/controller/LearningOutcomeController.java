@@ -2,6 +2,8 @@ package com.myEdu.ws.controller;
 
 import com.myEdu.ws.dto.LearningOutcomeRequest;
 import com.myEdu.ws.model.LearningOutcome;
+import com.myEdu.ws.repository.LearningOutcomeRepository;
+import com.myEdu.ws.service.AssessmentSumCalculationService;
 import com.myEdu.ws.service.LearningOutcomeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,12 @@ public class LearningOutcomeController {
 
     @Autowired
     private LearningOutcomeService learningOutcomeService;
+
+    @Autowired
+    private AssessmentSumCalculationService assessmentSumCalculationService;
+
+    @Autowired
+    private LearningOutcomeRepository learningOutcomeRepository;
 
     @GetMapping
     public ResponseEntity<List<LearningOutcome>> getAllLearningOutcomes() {
@@ -55,4 +63,16 @@ public class LearningOutcomeController {
         learningOutcomeService.deleteLearningOutcome(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/{id}/calculate-and-set")
+    public ResponseEntity<String> calculateAndSetAssessmentSumForLearningOutcome(@PathVariable Long id) {
+        LearningOutcome learningOutcome = learningOutcomeRepository.findById(id).orElse(null);
+        if (learningOutcome == null) {
+            return ResponseEntity.notFound().build();
+        }
+        assessmentSumCalculationService.calculateAndSetAssessmentSum(); // Yeni yöntemi kullanarak assessmentSum hesaplayın ve kaydedin
+        return ResponseEntity.ok("Assessment sum calculated and set successfully for LearningOutcome with ID: " + id);
+    }
+
+
 }
