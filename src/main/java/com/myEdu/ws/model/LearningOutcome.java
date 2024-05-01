@@ -29,6 +29,9 @@ public class LearningOutcome {
     @Column(nullable = true)
     private double scoreSum;
 
+    @Column(nullable = true)
+    private double levelOfProvision;
+
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "courseId")

@@ -50,7 +50,7 @@ public class AssessmentSumCalculationService {
         return totalContribution;
     }
 
-    public void calculateAndSetScoreSumForLearningOutcome(LearningOutcome learningOutcome) {
+    public void calculateAndSetScoreSumAndLevelOfProvisionForLearningOutcome(LearningOutcome learningOutcome) {
         List<AssessmentLearningOutcomeContribution> mappings = assessmentLearningOutcomeContributionRepository.findByLearningOutcome(learningOutcome);
         double scoreSum = 0.0;
         for (AssessmentLearningOutcomeContribution mapping : mappings) {
@@ -66,6 +66,8 @@ public class AssessmentSumCalculationService {
 
             scoreSum += scoreToAdd;
         }
+        double levelOfProvision = scoreSum / learningOutcome.getAssessmentSum() * 100;
+        learningOutcome.setLevelOfProvision(levelOfProvision);
         learningOutcome.setScoreSum(scoreSum);
         learningOutcomeRepository.save(learningOutcome);
     }

@@ -80,4 +80,19 @@ public class ProgramOutcomeService {
         programOutcomeRepository.save(programOutcome);
     }
 
+    public void calculateAndSetScoreAndLevelOfProvisionForProgramOutcome(ProgramOutcome programOutcome) {
+        List<LearningOutcomeProgramOutcome> mappings = learningOutcomeProgramOutcomeRepository.findByProgramOutcome(programOutcome);
+        double score = 0.0;
+        for (LearningOutcomeProgramOutcome mapping : mappings) {
+            LearningOutcome learningOutcome = mapping.getLearningOutcome();
+            double contribution = mapping.getContribution();
+            double learningOutcomeScoreSum= learningOutcome.getScoreSum();
+            double valueToAdd = (learningOutcomeScoreSum * contribution) / 100;
+            score += valueToAdd;
+        }
+        double levelOfProvision = score / programOutcome.getAssessmentValue() * 100;
+        programOutcome.setLevelOfProvision(levelOfProvision);
+        programOutcome.setScore(score);
+        programOutcomeRepository.save(programOutcome);
+    }
 }

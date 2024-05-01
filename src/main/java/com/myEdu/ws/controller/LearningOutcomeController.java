@@ -80,7 +80,7 @@ public class LearningOutcomeController {
         if (learningOutcome == null) {
             return ResponseEntity.notFound().build();
         }
-        assessmentSumCalculationService.calculateAndSetScoreSumForLearningOutcome(learningOutcome);
+        assessmentSumCalculationService.calculateAndSetScoreSumAndLevelOfProvisionForLearningOutcome(learningOutcome);
         return ResponseEntity.ok("Score sum calculated and set successfully for LearningOutcome with ID: " + id);
     }
 

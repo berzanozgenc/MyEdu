@@ -26,5 +26,10 @@ public class ProgramOutcome {
     @Column(nullable = true)
     private double assessmentValue;
 
+    @Column(nullable = true)
+    private double score;
+
+    @Column(nullable = true)
+    private double levelOfProvision;
 
 }

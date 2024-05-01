@@ -86,4 +86,15 @@ public class ProgramOutcomeController {
         programOutcomeService.calculateAndSetAssessmentValueForProgramOutcome(programOutcome);
         return ResponseEntity.ok("Assessment value calculated and set successfully for ProgramOutcome with ID: " + id);
     }
+
+    @PostMapping("/{id}/calculate-and-set-score-and-level-of-provision")
+    public ResponseEntity<String> calculateAndSetScoreAndLevelOfProvisionForProgramOutcome(@PathVariable Long id) {
+        ProgramOutcome programOutcome = programOutcomeRepository.findById(id).orElse(null);
+        if (programOutcome == null) {
+            return ResponseEntity.notFound().build();
+        }
+        programOutcomeService.calculateAndSetScoreAndLevelOfProvisionForProgramOutcome(programOutcome);
+        return ResponseEntity.ok("Score and level of provision calculated and set successfully for ProgramOutcome with ID: " + id);
+    }
+
 }
