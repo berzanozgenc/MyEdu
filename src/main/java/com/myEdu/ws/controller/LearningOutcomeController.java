@@ -64,7 +64,7 @@ public class LearningOutcomeController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/{id}/calculate-and-set")
+    @GetMapping("/{id}/calculate-and-set-assessment-sum")
     public ResponseEntity<String> calculateAndSetAssessmentSumForLearningOutcome(@PathVariable Long id) {
         LearningOutcome learningOutcome = learningOutcomeRepository.findById(id).orElse(null);
         if (learningOutcome == null) {
@@ -74,5 +74,14 @@ public class LearningOutcomeController {
         return ResponseEntity.ok("Assessment sum calculated and set successfully for LearningOutcome with ID: " + id);
     }
 
+    @PostMapping("/{id}/calculate-and-set-score-sum")
+    public ResponseEntity<String> calculateAndSetScoreSumForLearningOutcome(@PathVariable Long id) {
+        LearningOutcome learningOutcome = learningOutcomeRepository.findById(id).orElse(null);
+        if (learningOutcome == null) {
+            return ResponseEntity.notFound().build();
+        }
+        assessmentSumCalculationService.calculateAndSetScoreSumForLearningOutcome(learningOutcome);
+        return ResponseEntity.ok("Score sum calculated and set successfully for LearningOutcome with ID: " + id);
+    }
 
 }

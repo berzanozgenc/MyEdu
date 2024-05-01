@@ -26,6 +26,8 @@ public class LearningOutcome {
     @Column(nullable = true)
     private double assessmentSum;
 
+    @Column(nullable = true)
+    private double scoreSum;
 
     @ManyToOne
     @JsonIgnore

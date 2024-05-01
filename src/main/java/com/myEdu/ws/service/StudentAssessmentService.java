@@ -1,5 +1,6 @@
 package com.myEdu.ws.service;
 
+import com.myEdu.ws.model.Assessment;
 import com.myEdu.ws.model.StudentAssessment;
 import com.myEdu.ws.repository.AssessmentRepository;
 import com.myEdu.ws.repository.StudentAssessmentRepository;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Transactional
 @Service
@@ -30,6 +33,7 @@ public class StudentAssessmentService {
             studentAssessment.setAssessment(assessmentRepository.findById(assessmentId).orElse(null));
             studentAssessment.setGrade(grade);
             studentAssessmentRepository.save(studentAssessment);
+            updateAverageGradesForAssessments(); // Ortalama notları güncelle
             return new ResponseEntity<>("Student assessment created successfully", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>("Error creating student assessment: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -39,6 +43,7 @@ public class StudentAssessmentService {
     public ResponseEntity<String> deleteStudentAssessment(Long userId, Long assessmentId) {
         try {
             studentAssessmentRepository.deleteByStudentUserIdAndAssessmentAssessmentId(userId, assessmentId);
+            updateAverageGradesForAssessments(); // Ortalama notları güncelle
             return new ResponseEntity<>("Student assessment deleted successfully", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Error deleting student assessment: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -51,6 +56,7 @@ public class StudentAssessmentService {
             if (studentAssessment != null) {
                 studentAssessment.setGrade(newGrade);
                 studentAssessmentRepository.save(studentAssessment);
+                updateAverageGradesForAssessments(); // Ortalama notları güncelle
                 return new ResponseEntity<>("Student grade updated successfully", HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Student assessment not found", HttpStatus.NOT_FOUND);
@@ -70,6 +76,22 @@ public class StudentAssessmentService {
             }
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public void updateAverageGradesForAssessments() {
+        List<Assessment> assessments = assessmentRepository.findAll();
+        for (Assessment assessment : assessments) {
+            double totalGrade = 0;
+            int count = 0;
+            List<StudentAssessment> studentAssessments = studentAssessmentRepository.findByAssessment_AssessmentId(assessment.getAssessmentId());
+            for (StudentAssessment studentAssessment : studentAssessments) {
+                totalGrade += studentAssessment.getGrade();
+                count++;
+            }
+            double averageGrade = count > 0 ? totalGrade / count : 0;
+            assessment.setAverageGrade(averageGrade);
+            assessmentRepository.save(assessment);
         }
     }
 }

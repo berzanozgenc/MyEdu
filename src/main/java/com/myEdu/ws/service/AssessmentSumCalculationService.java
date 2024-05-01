@@ -49,4 +49,25 @@ public class AssessmentSumCalculationService {
         }
         return totalContribution;
     }
+
+    public void calculateAndSetScoreSumForLearningOutcome(LearningOutcome learningOutcome) {
+        List<AssessmentLearningOutcomeContribution> mappings = assessmentLearningOutcomeContributionRepository.findByLearningOutcome(learningOutcome);
+        double scoreSum = 0.0;
+        for (AssessmentLearningOutcomeContribution mapping : mappings) {
+            Assessment assessment = mapping.getAssessment();
+            GeneralAssessment generalAssessment = assessment.getGeneralAssessment();
+            double X = calculateTotalContribution(generalAssessment);
+            double Y = mapping.getContribution();
+            double Z = generalAssessment.getTotalContribution();
+            double contributionPercentage = (assessment.getContribution() / X) * Y * (Z / 100);
+            double E = assessment.getAverageGrade();
+            double F = assessment.getContribution();
+            double scoreToAdd = E * contributionPercentage / F;
+
+            scoreSum += scoreToAdd;
+        }
+        learningOutcome.setScoreSum(scoreSum);
+        learningOutcomeRepository.save(learningOutcome);
+    }
+
 }
