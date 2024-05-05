@@ -18,20 +18,4 @@ public class WsApplication {
 		SpringApplication.run(WsApplication.class, args);
 	}
 
-	@Bean
-	@Profile("dev") // sadece development modunda user üretmek için
-	CommandLineRunner userCreator(UserRepository userRepository){
-		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		return (args) -> {
-				for(var i = 1; i <= 25; i++){
-					User user = new User();
-					user.setFirstName("firstname"+i );
-					user.setLastName("lastname"+i );
-					user.setEmail("user"+i+"@mail.com" );
-					user.setPassword(passwordEncoder.encode("p4ssword"));
-					user.setStatusCode(1);
-					userRepository.save(user);
-				}
-		};
-	}
 }

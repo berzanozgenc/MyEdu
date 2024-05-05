@@ -30,7 +30,7 @@ public class GeneralAssessment {
     @Column
     private boolean questionBased = false;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL) // Cascade type is set here
     @JoinColumn(name= "courseId")
     @JsonIgnore
     private Course course;

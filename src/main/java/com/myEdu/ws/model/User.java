@@ -8,7 +8,8 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Table(name="MYEDU USER")
+@Table(name="MYEDU_USER")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Entity
 @Getter
 @Setter

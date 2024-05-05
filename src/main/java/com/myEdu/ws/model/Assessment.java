@@ -23,10 +23,10 @@ public class Assessment {
 
     private Double contribution;
 
-    @Column(columnDefinition = "double default 0.0")
+    @Column()
     private Double averageGrade;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL) // Cascade type is set here
     @JoinColumn(name = "generalAssesmentId")
     @JsonIgnore
     private GeneralAssessment generalAssessment;

@@ -32,7 +32,7 @@ public class LearningOutcome {
     @Column(nullable = true)
     private double levelOfProvision;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL) // Cascade type is set here
     @JsonIgnore
     @JoinColumn(name = "courseId")
     private Course course;

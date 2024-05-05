@@ -14,6 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Student extends User {
 
+
     @Column(nullable = true)
     private int studentNumber;
 
