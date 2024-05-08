@@ -1,5 +1,6 @@
 package com.myEdu.ws.service;
 
+import com.myEdu.ws.exception.NotFoundException;
 import com.myEdu.ws.model.Course;
 import com.myEdu.ws.model.LearningOutcome;
 import com.myEdu.ws.model.LearningOutcomeProgramOutcome;
@@ -63,14 +64,14 @@ public class ProgramOutcomeService {
     }
 
     // Program çıktısını güncelle
-    public ProgramOutcome updateProgramOutcome(Long id, ProgramOutcome newProgramOutcome) {
-        if (programOutcomeRepository.existsById(id)) {
-            newProgramOutcome.setId(id);
-            return programOutcomeRepository.save(newProgramOutcome);
-        } else {
-            // Belirli bir ID ile program çıktısı bulunamazsa null dönebilir veya isteğe göre bir hata işleme stratejisi uygulanabilir
-            return null;
-        }
+    public ProgramOutcome updateProgramOutcome(Long id, ProgramOutcome updatedProgramOutcome) {
+        ProgramOutcome existingProgramOutcome = programOutcomeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("ProgramOutcome not found with id: " + id));
+
+        existingProgramOutcome.setDescription(updatedProgramOutcome.getDescription());
+        existingProgramOutcome.setDepartment(updatedProgramOutcome.getDepartment());
+
+        return programOutcomeRepository.save(existingProgramOutcome);
     }
 
     public ProgramOutcome findById(Long id) {

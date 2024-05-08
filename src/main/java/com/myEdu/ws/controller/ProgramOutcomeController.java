@@ -62,13 +62,10 @@ public class ProgramOutcomeController {
 
     // Program çıktısını güncelle
     @PutMapping("/{id}")
-    public ResponseEntity<ProgramOutcome> updateProgramOutcome(@PathVariable Long id, @RequestBody ProgramOutcome programOutcome) {
-        ProgramOutcome updatedProgramOutcome = programOutcomeService.updateProgramOutcome(id, programOutcome);
-        if (updatedProgramOutcome != null) {
-            return ResponseEntity.ok(updatedProgramOutcome);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<ProgramOutcome> updateProgramOutcome(@PathVariable Long id,
+                                                                 @RequestBody ProgramOutcome updatedProgramOutcome) {
+        ProgramOutcome programOutcome = programOutcomeService.updateProgramOutcome(id, updatedProgramOutcome);
+        return new ResponseEntity<>(programOutcome, HttpStatus.OK);
     }
 
     // Program çıktısını sil
