@@ -1,7 +1,6 @@
 package com.myEdu.ws.controller;
 
-import com.myEdu.ws.dto.ContributionRequest;
-import com.myEdu.ws.dto.ContributionUpdateRequest;
+import com.myEdu.ws.dto.*;
 import com.myEdu.ws.model.Assessment;
 import com.myEdu.ws.model.AssessmentLearningOutcomeContribution;
 import com.myEdu.ws.model.LearningOutcomeProgramOutcome;
@@ -10,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/aloc")
@@ -54,4 +56,21 @@ public class AssessmentLearningOutcomeContributionController {
                 contributionService.updateContributionValue(contributionId, request.getNewContribution());
         return ResponseEntity.ok(updatedContribution);
     }
+
+    @PostMapping("/contribution")
+    public ResponseEntity<AlocContributionResponseDto> getContributionByAssessmentLearningOutcomeIds(@RequestBody AssessmentContributionListDto listDto) {
+        List<AssessmentContributionDto> records = listDto.getAssessmentContributionDTOList();
+
+        AlocContributionResponseDto alocContributionResponseDto = new AlocContributionResponseDto();
+        List<AssessmentLearningOutcomeContribution> list = new ArrayList<>();
+        for(AssessmentContributionDto dto: records){
+            AssessmentLearningOutcomeContribution assessmentLearningOutcomeContribution = contributionService.getAssessmentLearningOutcome(dto.getAssessmentId(), dto.getLearningId());
+            if (assessmentLearningOutcomeContribution != null) {
+                list.add(assessmentLearningOutcomeContribution);
+            }
+        }
+        alocContributionResponseDto.setContributions(list);
+        return new ResponseEntity<>(alocContributionResponseDto, HttpStatus.OK);
+    }
+
 }
