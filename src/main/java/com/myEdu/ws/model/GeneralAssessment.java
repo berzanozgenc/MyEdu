@@ -30,12 +30,12 @@ public class GeneralAssessment {
     @Column
     private boolean questionBased = false;
 
-    @ManyToOne(cascade = CascadeType.ALL) // Cascade type is set here
+    @ManyToOne
     @JoinColumn(name= "courseId")
     @JsonIgnore
     private Course course;
 
-    @OneToMany(mappedBy = "generalAssessment")
+    @OneToMany(mappedBy = "generalAssessment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Assessment> assessments;
 
 }

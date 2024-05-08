@@ -9,6 +9,8 @@ import com.myEdu.ws.repository.ProgramOutcomeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class LearningOutcomeProgramOutcomeService {
 
@@ -45,27 +47,12 @@ public class LearningOutcomeProgramOutcomeService {
     }
 
     //İlişki güncelle
-    public LearningOutcomeProgramOutcome updateRelationship(Long id, Long learningOutcomeId, Long programOutcomeId, double contribution) {
-        LearningOutcomeProgramOutcome relationship = learningOutcomeProgramOutcomeRepository.findById(id).orElse(null);
-        LearningOutcome learningOutcome = learningOutcomeRepository.findById(learningOutcomeId).orElse(null);
-        ProgramOutcome programOutcome = programOutcomeRepository.findById(programOutcomeId).orElse(null);
-        if (relationship != null && learningOutcome != null && programOutcome != null) {
-            relationship.setLearningOutcome(learningOutcome);
-            relationship.setProgramOutcome(programOutcome);
-            relationship.setContribution(contribution);
-            return learningOutcomeProgramOutcomeRepository.save(relationship);
-        }
-        return null;
+    public LearningOutcomeProgramOutcome updateContribution(LearningOutcomeProgramOutcome learningOutcomeProgramOutcome) {
+      return learningOutcomeProgramOutcomeRepository.save(learningOutcomeProgramOutcome);
     }
 
-    // Belirli bir learning outcome ve program outcome ID'sine göre contribution değerini getirme
-    public Double getContributionByOutcomeIds(Long learningOutcomeId, Long programOutcomeId) {
-        LearningOutcomeProgramOutcome relationship = learningOutcomeProgramOutcomeRepository.findByLearningOutcomeIdAndProgramOutcomeId(learningOutcomeId, programOutcomeId);
-        if (relationship != null) {
-            return relationship.getContribution();
-        } else {
-            return null;
-        }
+    public LearningOutcomeProgramOutcome getLearningProgramOutcome(Long learningOutcomeId, Long programOutcomeId) {
+        Optional<LearningOutcomeProgramOutcome> relationship = learningOutcomeProgramOutcomeRepository.findByLearningOutcomeIdAndProgramOutcomeId(learningOutcomeId, programOutcomeId);
+        return relationship.orElse(null);
     }
-
 }

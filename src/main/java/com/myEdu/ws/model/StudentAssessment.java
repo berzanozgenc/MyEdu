@@ -18,11 +18,11 @@ public class StudentAssessment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL) // Cascade type is set here
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User student;
 
-    @ManyToOne(cascade = CascadeType.ALL) // Cascade type is set here
+    @ManyToOne
     @JoinColumn(name = "assessment_id")
     private Assessment assessment;
 

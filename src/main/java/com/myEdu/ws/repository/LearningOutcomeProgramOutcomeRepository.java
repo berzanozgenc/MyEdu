@@ -6,10 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface LearningOutcomeProgramOutcomeRepository extends JpaRepository  <LearningOutcomeProgramOutcome, Long> {
-    LearningOutcomeProgramOutcome findByLearningOutcomeIdAndProgramOutcomeId(Long learningOutcomeId, Long programOutcomeId);
+    Optional<LearningOutcomeProgramOutcome> findByLearningOutcomeIdAndProgramOutcomeId(Long learningOutcomeId, Long programOutcomeId);
     List<LearningOutcomeProgramOutcome> findByProgramOutcome(ProgramOutcome programOutcome);
 
 }

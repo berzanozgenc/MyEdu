@@ -1,8 +1,10 @@
 package com.myEdu.ws.service;
 
+import com.myEdu.ws.model.Course;
 import com.myEdu.ws.model.LearningOutcome;
 import com.myEdu.ws.model.LearningOutcomeProgramOutcome;
 import com.myEdu.ws.model.ProgramOutcome;
+import com.myEdu.ws.repository.CourseRepository;
 import com.myEdu.ws.repository.LearningOutcomeProgramOutcomeRepository;
 import com.myEdu.ws.repository.ProgramOutcomeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +19,14 @@ public class ProgramOutcomeService {
     private final ProgramOutcomeRepository programOutcomeRepository;
     private final ProgramOutcomeCalculationService programOutcomeCalculationService;
     private final LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository;
+    private final CourseRepository courseRepository;
 
     @Autowired
-    public ProgramOutcomeService(ProgramOutcomeRepository programOutcomeRepository, ProgramOutcomeCalculationService programOutcomeCalculationService, LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository) {
+    public ProgramOutcomeService(ProgramOutcomeRepository programOutcomeRepository, ProgramOutcomeCalculationService programOutcomeCalculationService, LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository, CourseRepository courseRepository) {
         this.programOutcomeRepository = programOutcomeRepository;
         this.programOutcomeCalculationService = programOutcomeCalculationService;
         this.learningOutcomeProgramOutcomeRepository = learningOutcomeProgramOutcomeRepository;
+        this.courseRepository = courseRepository;
     }
 
     public void calculateAndSetProgramOutcomeTarget(ProgramOutcome programOutcome) {
@@ -30,6 +34,11 @@ public class ProgramOutcomeService {
         programOutcome.setTarget(target);
         programOutcomeRepository.save(programOutcome);
     }
+
+    public List<ProgramOutcome> getByCourseId(Long courseId) {
+        return programOutcomeRepository.findByCourseCourseId(courseId);
+    }
+
 
     // Tüm program çıktılarını getir
     public List<ProgramOutcome> getAllProgramOutcomes() {
@@ -42,8 +51,15 @@ public class ProgramOutcomeService {
     }
 
     // Yeni bir program çıktısı oluştur
-    public ProgramOutcome createProgramOutcome(ProgramOutcome programOutcome) {
-        return programOutcomeRepository.save(programOutcome);
+    public ProgramOutcome createProgramOutcome(ProgramOutcome programOutcome, Long courseId) {
+        Course course = courseRepository.findById(courseId).orElse(null);
+        if (course != null) {
+            programOutcome.setCourse(course);
+            return programOutcomeRepository.save(programOutcome);
+        } else {
+            // Belirtilen courseId ile ders bulunamazsa veya null ise null dönebilir veya isteğe göre bir hata işleme stratejisi uygulanabilir
+            return null;
+        }
     }
 
     // Program çıktısını güncelle

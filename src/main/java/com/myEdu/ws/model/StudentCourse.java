@@ -18,11 +18,11 @@ public class StudentCourse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL) // Cascade type is set here
+    @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 
-    @ManyToOne(cascade = CascadeType.ALL) // Cascade type is set here
+    @ManyToOne
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 

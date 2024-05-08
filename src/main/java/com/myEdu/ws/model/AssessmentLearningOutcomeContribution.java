@@ -16,11 +16,11 @@ public class AssessmentLearningOutcomeContribution {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL) // Cascade type is set here
+    @ManyToOne
     @JoinColumn(name = "assessment_id")
     private Assessment assessment;
 
-    @ManyToOne(cascade = CascadeType.ALL) // Cascade type is set here
+    @ManyToOne
     @JoinColumn(name = "learning_outcome_id")
     private LearningOutcome learningOutcome;
 

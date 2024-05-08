@@ -1,5 +1,6 @@
 package com.myEdu.ws.controller;
 
+import com.myEdu.ws.model.LearningOutcome;
 import com.myEdu.ws.model.ProgramOutcome;
 import com.myEdu.ws.repository.ProgramOutcomeRepository;
 import com.myEdu.ws.service.ProgramOutcomeCalculationService;
@@ -35,6 +36,12 @@ public class ProgramOutcomeController {
         return ResponseEntity.ok(programOutcomes);
     }
 
+    @GetMapping("/course/{courseId}")
+    public ResponseEntity<List<ProgramOutcome>> getProgramOutcomesByCourseId(@PathVariable Long courseId) {
+        List<ProgramOutcome> programOutcomes = programOutcomeService.getByCourseId(courseId);
+        return ResponseEntity.ok().body(programOutcomes);
+    }
+
     // Belirli bir program çıktısını ID'ye göre getir
     @GetMapping("/{id}")
     public ResponseEntity<ProgramOutcome> getProgramOutcomeById(@PathVariable Long id) {
@@ -43,10 +50,14 @@ public class ProgramOutcomeController {
     }
 
     // Yeni bir program çıktısı oluştur
-    @PostMapping
-    public ResponseEntity<ProgramOutcome> createProgramOutcome(@RequestBody ProgramOutcome programOutcome) {
-        ProgramOutcome createdProgramOutcome = programOutcomeService.createProgramOutcome(programOutcome);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdProgramOutcome);
+    @PostMapping("/{courseId}")
+    public ResponseEntity<ProgramOutcome> createProgramOutcome(@PathVariable Long courseId, @RequestBody ProgramOutcome programOutcome) {
+        ProgramOutcome createdProgramOutcome = programOutcomeService.createProgramOutcome(programOutcome, courseId);
+        if (createdProgramOutcome != null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdProgramOutcome);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // veya isteğe göre uygun bir hata durumu dönebilirsiniz
+        }
     }
 
     // Program çıktısını güncelle

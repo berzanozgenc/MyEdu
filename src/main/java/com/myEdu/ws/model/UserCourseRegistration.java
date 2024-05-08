@@ -20,11 +20,11 @@ public class UserCourseRegistration {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long registrationId;
 
-    @ManyToOne(cascade = CascadeType.ALL) // Cascade type is set here
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(cascade = CascadeType.ALL) // Cascade type is set here
+    @ManyToOne
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 

@@ -37,9 +37,12 @@ public class Course {
     @Column(nullable = false)
     private int section;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL) // Cascade type is set here
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GeneralAssessment> generalAssessment;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL) // Cascade type is set here
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LearningOutcome> learningOutcome;
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProgramOutcome> programOutcome;
 }

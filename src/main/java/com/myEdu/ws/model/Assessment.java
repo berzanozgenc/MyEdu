@@ -26,7 +26,7 @@ public class Assessment {
     @Column()
     private Double averageGrade;
 
-    @ManyToOne(cascade = CascadeType.ALL) // Cascade type is set here
+    @ManyToOne
     @JoinColumn(name = "generalAssesmentId")
     @JsonIgnore
     private GeneralAssessment generalAssessment;
@@ -54,7 +54,7 @@ public class Assessment {
         }
     }
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "Assessment_LearningOutcome_Contribution",
             joinColumns = @JoinColumn(name = "assessment_id"),

@@ -21,11 +21,11 @@ public class LearningOutcomeProgramOutcome {
     @Column
     private double contribution;
 
-    @ManyToOne(cascade = CascadeType.ALL) // Cascade type is set here
+    @ManyToOne
     @JoinColumn(name = "learning_outcome_id", referencedColumnName = "id")
     private LearningOutcome learningOutcome;
 
-    @ManyToOne(cascade = CascadeType.ALL) // Cascade type is set here
+    @ManyToOne
     @JoinColumn(name = "program_outcome_id", referencedColumnName = "id")
     private ProgramOutcome programOutcome;
 

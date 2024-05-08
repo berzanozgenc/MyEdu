@@ -1,5 +1,6 @@
 package com.myEdu.ws.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,5 +32,10 @@ public class ProgramOutcome {
 
     @Column(nullable = true)
     private double levelOfProvision;
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "courseId")
+    private Course course;
 
 }
