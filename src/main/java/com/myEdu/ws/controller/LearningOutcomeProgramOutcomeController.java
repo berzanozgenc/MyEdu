@@ -6,7 +6,6 @@ import com.myEdu.ws.dto.LearningOutcomeContributionListDTO;
 import com.myEdu.ws.dto.LearningOutcomeProgramOutcomeDTO;
 import com.myEdu.ws.model.LearningOutcomeProgramOutcome;
 import com.myEdu.ws.service.LearningOutcomeProgramOutcomeService;
-import org.apache.coyote.ContinueResponseTiming;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

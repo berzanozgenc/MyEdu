@@ -1,7 +1,6 @@
 package com.myEdu.ws.controller;
 
-import com.myEdu.ws.dto.StudentAssessmentDTO;
-import com.myEdu.ws.model.LearningOutcomeProgramOutcome;
+import com.myEdu.ws.dto.*;
 import com.myEdu.ws.model.StudentAssessment;
 import com.myEdu.ws.service.StudentAssessmentService;
 import jakarta.transaction.Transactional;
@@ -9,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @Transactional
@@ -46,5 +48,21 @@ public class StudentAssessmentController {
     public ResponseEntity<Double> getStudentGrade(@RequestParam Long userId,
                                                   @RequestParam Long assessmentId) {
         return studentAssessmentService.getStudentGrade(userId, assessmentId);
+    }
+
+    @PostMapping("/grade")
+    public ResponseEntity<SAGradeResponseDto> getGradeByStudentAssessmentIds(@RequestBody StudentGradeListDto listDto) {
+        List<StudentGradeDto> records = listDto.getStudentGradeDTOList();
+
+        SAGradeResponseDto saGradeResponseDto = new SAGradeResponseDto();
+        List<StudentAssessment> list = new ArrayList<>();
+        for(StudentGradeDto dto: records){
+            StudentAssessment studentAssessment = studentAssessmentService.getStudentAssessment(dto.getAssessmentId(), dto.getUser_id());
+            if (studentAssessment != null) {
+                list.add(studentAssessment);
+            }
+        }
+        saGradeResponseDto.setGrades(list);
+        return new ResponseEntity<>(saGradeResponseDto, HttpStatus.OK);
     }
 }
