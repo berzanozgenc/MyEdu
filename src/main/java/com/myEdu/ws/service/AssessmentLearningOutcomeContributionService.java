@@ -1,9 +1,7 @@
 package com.myEdu.ws.service;
 
 import com.myEdu.ws.exception.NotFoundException;
-import com.myEdu.ws.model.Assessment;
-import com.myEdu.ws.model.AssessmentLearningOutcomeContribution;
-import com.myEdu.ws.model.LearningOutcome;
+import com.myEdu.ws.model.*;
 import com.myEdu.ws.repository.AssessmentLearningOutcomeContributionRepository;
 import com.myEdu.ws.repository.AssessmentRepository;
 import com.myEdu.ws.repository.LearningOutcomeRepository;
@@ -27,21 +25,21 @@ public class AssessmentLearningOutcomeContributionService {
     @Autowired
     private LearningOutcomeRepository learningOutcomeRepository;
 
-    public AssessmentLearningOutcomeContribution createAssessmentLearningOutcomeContribution(
-            Long assessmentId, Long learningOutcomeId, Double contribution) {
-        Assessment assessment = assessmentRepository.findById(assessmentId)
-                .orElseThrow(() -> new NotFoundException("Assessment not found with id: " + assessmentId));
+    public AssessmentLearningOutcomeContribution createAssessmentLearningOutcomeContribution(Long assessmentId, Long learningOutcomeId, Double contribution) {
+        LearningOutcome learningOutcome = learningOutcomeRepository.findById(learningOutcomeId).orElse(null);
+        Assessment assessment = assessmentRepository.findById(assessmentId).orElse(null);
+        if (learningOutcome != null && assessment != null) {
+            AssessmentLearningOutcomeContribution relationship = new AssessmentLearningOutcomeContribution();
+            relationship.setLearningOutcome(learningOutcome);
+            relationship.setAssessment(assessment);
+            relationship.setContribution(contribution); // Contribution değerini ayarla
+            return contributionRepository.save(relationship);
+        }
+        return null;
+    }
 
-        LearningOutcome learningOutcome = learningOutcomeRepository.findById(learningOutcomeId)
-                .orElseThrow(() -> new NotFoundException("LearningOutcome not found with id: " + learningOutcomeId));
-
-        AssessmentLearningOutcomeContribution contributionEntry =
-                contributionRepository.findByAssessmentAndLearningOutcome(assessment, learningOutcome)
-                        .orElseGet(() -> new AssessmentLearningOutcomeContribution(assessment, learningOutcome, 0.0));
-
-        contributionEntry.setContribution(contribution);
-
-        return contributionRepository.save(contributionEntry);
+    public AssessmentLearningOutcomeContribution updateContribution(AssessmentLearningOutcomeContribution assessmentLearningOutcomeContribution) {
+        return contributionRepository.save(assessmentLearningOutcomeContribution);
     }
 
     public void deleteAssessmentLearningOutcomeContribution(Long contributionId) {
@@ -63,13 +61,9 @@ public class AssessmentLearningOutcomeContributionService {
         return contributionRepository.save(contribution);
     }
 
-    public Double getContributionByLearningOutcomeAndAssessment(Long learningOutcomeId, Long assessmentId) {
-        AssessmentLearningOutcomeContribution contribution =
-                contributionRepository.findByLearningOutcomeIdAndAssessmentAssessmentId(learningOutcomeId, assessmentId);
-        if (contribution != null) {
-            return contribution.getContribution();
-        }
-        return null; // Contribution not found
-    }
 
+    public AssessmentLearningOutcomeContribution getAssessmentLearningOutcome(Long assessmentId, Long learningOutcomeId) {
+        Optional<AssessmentLearningOutcomeContribution> relationship = contributionRepository.findByLearningOutcomeIdAndAssessmentAssessmentId(learningOutcomeId, assessmentId);
+        return relationship.orElse(null);
+    }
 }

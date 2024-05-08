@@ -2,7 +2,9 @@ package com.myEdu.ws.controller;
 
 import com.myEdu.ws.dto.ContributionRequest;
 import com.myEdu.ws.dto.ContributionUpdateRequest;
+import com.myEdu.ws.model.Assessment;
 import com.myEdu.ws.model.AssessmentLearningOutcomeContribution;
+import com.myEdu.ws.model.LearningOutcomeProgramOutcome;
 import com.myEdu.ws.service.AssessmentLearningOutcomeContributionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,11 +19,21 @@ public class AssessmentLearningOutcomeContributionController {
     private AssessmentLearningOutcomeContributionService contributionService;
 
     @PostMapping
-    public ResponseEntity<AssessmentLearningOutcomeContribution> createContribution(
-            @RequestBody ContributionRequest request) {
-        AssessmentLearningOutcomeContribution newContribution = contributionService.createAssessmentLearningOutcomeContribution(
-                request.getAssessmentId(), request.getLearningOutcomeId(), request.getContribution());
-        return new ResponseEntity<>(newContribution, HttpStatus.CREATED);
+    public ResponseEntity<AssessmentLearningOutcomeContribution> createAssessmentLearningOutcomeContribution(@RequestBody ContributionRequest request) {
+        AssessmentLearningOutcomeContribution record = contributionService.getAssessmentLearningOutcome(request.getAssessmentId(), request.getLearningOutcomeId());
+        if(record == null) {
+            AssessmentLearningOutcomeContribution relationship = contributionService.createAssessmentLearningOutcomeContribution(request.getAssessmentId(), request.getLearningOutcomeId(), request.getContribution());
+            if (relationship != null) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(relationship);
+            } else {
+                return ResponseEntity.badRequest().build();
+            }
+        }
+        else {
+            record.setContribution(request.getContribution());
+            contributionService.updateContribution(record);
+            return new ResponseEntity<>(record, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("/{contributionId}")
@@ -42,14 +54,4 @@ public class AssessmentLearningOutcomeContributionController {
                 contributionService.updateContributionValue(contributionId, request.getNewContribution());
         return ResponseEntity.ok(updatedContribution);
     }
-
-    @GetMapping("/contribution")
-    public ResponseEntity<Double> getContributionByLearningOutcomeAndAssessment(
-            @RequestParam Long learningOutcomeId,
-            @RequestParam Long assessmentId) {
-        Double contribution = contributionService.getContributionByLearningOutcomeAndAssessment(
-                learningOutcomeId, assessmentId);
-        return ResponseEntity.ok(contribution);
-    }
-
 }

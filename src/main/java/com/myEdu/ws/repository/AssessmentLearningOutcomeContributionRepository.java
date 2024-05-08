@@ -15,7 +15,7 @@ public interface AssessmentLearningOutcomeContributionRepository
 
     Optional<AssessmentLearningOutcomeContribution> findByAssessmentAndLearningOutcome(
             Assessment assessment, LearningOutcome learningOutcome);
-    AssessmentLearningOutcomeContribution findByLearningOutcomeIdAndAssessmentAssessmentId(Long learningOutcomeId, Long assessmentId);
+   Optional<AssessmentLearningOutcomeContribution>  findByLearningOutcomeIdAndAssessmentAssessmentId(Long learningOutcomeId, Long assessmentId);
 
     List<AssessmentLearningOutcomeContribution> findByLearningOutcome(LearningOutcome learningOutcome);
 

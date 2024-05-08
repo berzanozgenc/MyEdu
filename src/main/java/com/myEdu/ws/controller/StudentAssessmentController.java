@@ -1,5 +1,7 @@
 package com.myEdu.ws.controller;
 
+import com.myEdu.ws.dto.StudentAssessmentDTO;
+import com.myEdu.ws.model.LearningOutcomeProgramOutcome;
 import com.myEdu.ws.model.StudentAssessment;
 import com.myEdu.ws.service.StudentAssessmentService;
 import jakarta.transaction.Transactional;
@@ -17,23 +19,27 @@ public class StudentAssessmentController {
     private StudentAssessmentService studentAssessmentService;
 
     @PostMapping("/create")
-    public ResponseEntity<String> createStudentAssessment(@RequestParam Long userId,
-                                                          @RequestParam Long assessmentId,
-                                                          @RequestParam double grade) {
-        return studentAssessmentService.createStudentAssessment(userId, assessmentId, grade);
+    public ResponseEntity<StudentAssessment> createStudentAssessment(@RequestBody StudentAssessmentDTO request) {
+        StudentAssessment record = studentAssessmentService.getStudentAssessment(request.getAssessmentId(), request.getUser_id());
+        if(record == null) {
+            StudentAssessment relationship = studentAssessmentService.createStudentAssessment(request.getUser_id(), request.getAssessmentId(), request.getGrade());
+            if (relationship != null) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(relationship);
+            } else {
+                return ResponseEntity.badRequest().build();
+            }
+        }
+        else {
+            record.setGrade(request.getGrade());
+            studentAssessmentService.updateGrade(record);
+            return new ResponseEntity<>(record, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteStudentAssessment(@RequestParam Long userId,
                                                           @RequestParam Long assessmentId) {
         return studentAssessmentService.deleteStudentAssessment(userId, assessmentId);
-    }
-
-    @PutMapping("/update")
-    public ResponseEntity<String> updateStudentGrade(@RequestParam Long userId,
-                                                     @RequestParam Long assessmentId,
-                                                     @RequestParam double newGrade) {
-        return studentAssessmentService.updateStudentGrade(userId, assessmentId, newGrade);
     }
 
     @GetMapping("/get-grade")

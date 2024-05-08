@@ -1,9 +1,9 @@
 package com.myEdu.ws.service;
 
-import com.myEdu.ws.model.Assessment;
-import com.myEdu.ws.model.StudentAssessment;
+import com.myEdu.ws.model.*;
 import com.myEdu.ws.repository.AssessmentRepository;
 import com.myEdu.ws.repository.StudentAssessmentRepository;
+import com.myEdu.ws.repository.StudentRepository;
 import com.myEdu.ws.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -26,18 +27,24 @@ public class StudentAssessmentService {
     @Autowired
     private AssessmentRepository assessmentRepository;
 
-    public ResponseEntity<String> createStudentAssessment(Long userId, Long assessmentId, double grade) {
-        try {
-            StudentAssessment studentAssessment = new StudentAssessment();
-            studentAssessment.setStudent(userRepository.findById(userId).orElse(null));
-            studentAssessment.setAssessment(assessmentRepository.findById(assessmentId).orElse(null));
-            studentAssessment.setGrade(grade);
-            studentAssessmentRepository.save(studentAssessment);
-            updateAverageGradesForAssessments(); // Ortalama notları güncelle
-            return new ResponseEntity<>("Student assessment created successfully", HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error creating student assessment: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    @Autowired
+    private StudentRepository studentRepository;
+
+    public StudentAssessment createStudentAssessment(Long userId, Long assessmentId, double grade) {
+        Assessment assessment = assessmentRepository.findById(assessmentId).orElse(null);
+        Student student = studentRepository.findById(userId).orElse(null);
+        if (student != null && assessment != null) {
+            StudentAssessment relationship = new StudentAssessment();
+            relationship.setAssessment(assessment);
+            relationship.setStudent(student);
+            relationship.setGrade(grade);
+            return studentAssessmentRepository.save(relationship);
         }
+        return null;
+    }
+
+    public StudentAssessment updateGrade(StudentAssessment studentAssessment) {
+        return studentAssessmentRepository.save(studentAssessment);
     }
 
     public ResponseEntity<String> deleteStudentAssessment(Long userId, Long assessmentId) {
@@ -47,22 +54,6 @@ public class StudentAssessmentService {
             return new ResponseEntity<>("Student assessment deleted successfully", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Error deleting student assessment: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    public ResponseEntity<String> updateStudentGrade(Long userId, Long assessmentId, double newGrade) {
-        try {
-            StudentAssessment studentAssessment = studentAssessmentRepository.findByStudentUserIdAndAssessmentAssessmentId(userId, assessmentId);
-            if (studentAssessment != null) {
-                studentAssessment.setGrade(newGrade);
-                studentAssessmentRepository.save(studentAssessment);
-                updateAverageGradesForAssessments(); // Ortalama notları güncelle
-                return new ResponseEntity<>("Student grade updated successfully", HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("Student assessment not found", HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error updating student grade: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -94,4 +85,10 @@ public class StudentAssessmentService {
             assessmentRepository.save(assessment);
         }
     }
+
+    public StudentAssessment getStudentAssessment(Long assessmentId, Long userId) {
+        Optional<StudentAssessment> relationship = studentAssessmentRepository.findByAssessmentAssessmentIdAndStudentUserId(assessmentId, userId);
+        return relationship.orElse(null);
+    }
+
 }
