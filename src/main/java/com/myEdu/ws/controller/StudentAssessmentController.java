@@ -21,21 +21,27 @@ public class StudentAssessmentController {
     private StudentAssessmentService studentAssessmentService;
 
     @PostMapping("/create")
-    public ResponseEntity<StudentAssessment> createStudentAssessment(@RequestBody StudentAssessmentDTO request) {
-        StudentAssessment record = studentAssessmentService.getStudentAssessment(request.getAssessmentId(), request.getUser_id());
-        if(record == null) {
-            StudentAssessment relationship = studentAssessmentService.createStudentAssessment(request.getUser_id(), request.getAssessmentId(), request.getGrade());
-            if (relationship != null) {
-                return ResponseEntity.status(HttpStatus.CREATED).body(relationship);
-            } else {
-                return ResponseEntity.badRequest().build();
+    public ResponseEntity<String> createStudentAssessment(@RequestBody StudentAssessmentListDto requestListDto) {
+        boolean created = false;
+        boolean updated = false;
+        for (StudentAssessmentDTO request: requestListDto.getStAsList()){
+            StudentAssessment record = studentAssessmentService.getStudentAssessment(request.getAssessmentId(), request.getUser_id());
+            if(record == null) {
+                StudentAssessment relationship = studentAssessmentService.createStudentAssessment(request.getUser_id(), request.getAssessmentId(), request.getGrade());
+                created = true;
+                updated = false;
+            }
+            else {
+                record.setGrade(request.getGrade());
+                studentAssessmentService.updateGrade(record);
+                updated = true;
+                created = false;
             }
         }
-        else {
-            record.setGrade(request.getGrade());
-            studentAssessmentService.updateGrade(record);
-            return new ResponseEntity<>(record, HttpStatus.OK);
-        }
+        if(created || updated)
+            return new ResponseEntity<>("Changes are persisted",HttpStatus.OK);
+        else
+            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("/delete")
