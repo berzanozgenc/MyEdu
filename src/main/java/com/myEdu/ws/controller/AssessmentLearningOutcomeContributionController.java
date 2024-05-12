@@ -21,21 +21,28 @@ public class AssessmentLearningOutcomeContributionController {
     private AssessmentLearningOutcomeContributionService contributionService;
 
     @PostMapping
-    public ResponseEntity<AssessmentLearningOutcomeContribution> createAssessmentLearningOutcomeContribution(@RequestBody ContributionRequest request) {
-        AssessmentLearningOutcomeContribution record = contributionService.getAssessmentLearningOutcome(request.getAssessmentId(), request.getLearningOutcomeId());
-        if(record == null) {
-            AssessmentLearningOutcomeContribution relationship = contributionService.createAssessmentLearningOutcomeContribution(request.getAssessmentId(), request.getLearningOutcomeId(), request.getContribution());
-            if (relationship != null) {
-                return ResponseEntity.status(HttpStatus.CREATED).body(relationship);
-            } else {
-                return ResponseEntity.badRequest().build();
+    public ResponseEntity<String> createAssessmentLearningOutcomeContribution(@RequestBody ContributionRequestListDto requestListDto) {
+        boolean created = false;
+        boolean updated = false;
+        for(ContributionRequest request: requestListDto.getAlocList()) {
+            AssessmentLearningOutcomeContribution record = contributionService.getAssessmentLearningOutcome(request.getAssessmentId(), request.getLearningOutcomeId());
+            if(record == null) {
+                AssessmentLearningOutcomeContribution relationship = contributionService.createAssessmentLearningOutcomeContribution(request.getAssessmentId(), request.getLearningOutcomeId(), request.getContribution());
+                created = true;
+                updated = false;
+            }
+            else {
+                record.setContribution(request.getContribution());
+                contributionService.updateContribution(record);
+                updated = true;
+                created = false;
             }
         }
-        else {
-            record.setContribution(request.getContribution());
-            contributionService.updateContribution(record);
-            return new ResponseEntity<>(record, HttpStatus.OK);
-        }
+        if(created || updated)
+            return new ResponseEntity<>("Changes are persisted",HttpStatus.OK);
+        else
+            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+
     }
 
     @DeleteMapping("/{contributionId}")
