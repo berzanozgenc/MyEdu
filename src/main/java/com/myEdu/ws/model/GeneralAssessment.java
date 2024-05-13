@@ -35,7 +35,7 @@ public class GeneralAssessment {
     @JsonIgnore
     private Course course;
 
-    @OneToMany(mappedBy = "generalAssessment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "generalAssessment", cascade = CascadeType.ALL)
     private List<Assessment> assessments;
 
 }

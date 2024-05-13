@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+import java.util.List;
+
 
 @Entity
 @Getter
@@ -37,5 +40,6 @@ public class ProgramOutcome {
     @JsonIgnore
     @JoinColumn(name = "courseId")
     private Course course;
+
 
 }

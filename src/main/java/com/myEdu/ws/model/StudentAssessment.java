@@ -5,6 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import static jakarta.persistence.ConstraintMode.CONSTRAINT;
 
 @Entity
 @Getter
@@ -22,7 +26,8 @@ public class StudentAssessment {
     @JoinColumn(name = "user_id")
     private User student;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "assessment_id")
     private Assessment assessment;
 

@@ -2,9 +2,11 @@ package com.myEdu.ws.controller;
 
 import com.myEdu.ws.dto.LearningOutcomeRequest;
 import com.myEdu.ws.model.LearningOutcome;
+import com.myEdu.ws.repository.LearningOutcomeProgramOutcomeRepository;
 import com.myEdu.ws.repository.LearningOutcomeRepository;
 import com.myEdu.ws.service.AssessmentSumCalculationService;
 import com.myEdu.ws.service.LearningOutcomeService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,9 @@ public class LearningOutcomeController {
 
     @Autowired
     private LearningOutcomeRepository learningOutcomeRepository;
+
+    @Autowired
+    private LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository;
 
     @GetMapping
     public ResponseEntity<List<LearningOutcome>> getAllLearningOutcomes() {
@@ -59,7 +64,9 @@ public class LearningOutcomeController {
     }
 
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<Void> deleteLearningOutcome(@PathVariable Long id) {
+        learningOutcomeProgramOutcomeRepository.deleteAllByLearningOutcome(id);
         learningOutcomeService.deleteLearningOutcome(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

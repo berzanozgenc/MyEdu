@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -61,5 +63,8 @@ public class Assessment {
             inverseJoinColumns = @JoinColumn(name = "learning_outcome_id")
     )
     private List<LearningOutcome> learningOutcomes;
+
+    @OneToMany(mappedBy = "assessment", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<StudentAssessment> studentAssessment;
 
 }

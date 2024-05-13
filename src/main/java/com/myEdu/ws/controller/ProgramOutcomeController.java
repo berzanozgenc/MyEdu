@@ -2,9 +2,13 @@ package com.myEdu.ws.controller;
 
 import com.myEdu.ws.model.LearningOutcome;
 import com.myEdu.ws.model.ProgramOutcome;
+import com.myEdu.ws.repository.LearningOutcomeProgramOutcomeRepository;
 import com.myEdu.ws.repository.ProgramOutcomeRepository;
+import com.myEdu.ws.service.LearningOutcomeProgramOutcomeService;
+import com.myEdu.ws.service.LearningOutcomeService;
 import com.myEdu.ws.service.ProgramOutcomeCalculationService;
 import com.myEdu.ws.service.ProgramOutcomeService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +23,19 @@ public class ProgramOutcomeController {
 
     private final ProgramOutcomeCalculationService programOutcomeCalculationService;
     private final ProgramOutcomeService programOutcomeService;
+    private final LearningOutcomeService learningOutcomeService;
+
+    private final LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository;
 
     private final ProgramOutcomeRepository programOutcomeRepository;
 
     @Autowired
-    public ProgramOutcomeController(ProgramOutcomeCalculationService programOutcomeCalculationService, ProgramOutcomeService programOutcomeService, ProgramOutcomeRepository programOutcomeRepository) {
+    public ProgramOutcomeController(ProgramOutcomeCalculationService programOutcomeCalculationService, ProgramOutcomeService programOutcomeService, ProgramOutcomeRepository programOutcomeRepository, LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository, LearningOutcomeService learningOutcomeService) {
         this.programOutcomeCalculationService = programOutcomeCalculationService;
         this.programOutcomeService = programOutcomeService;
         this.programOutcomeRepository = programOutcomeRepository;
+        this.learningOutcomeProgramOutcomeRepository = learningOutcomeProgramOutcomeRepository;
+        this.learningOutcomeService = learningOutcomeService;
     }
 
     // Tüm program çıktılarını getir
@@ -70,7 +79,9 @@ public class ProgramOutcomeController {
 
     // Program çıktısını sil
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<Void> deleteProgramOutcome(@PathVariable Long id) {
+        learningOutcomeProgramOutcomeRepository.deleteAllByProgramOutcome(id);
         programOutcomeService.deleteProgramOutcome(id);
         return ResponseEntity.noContent().build();
     }
