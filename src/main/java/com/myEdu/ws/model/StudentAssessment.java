@@ -22,12 +22,11 @@ public class StudentAssessment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id")
     private User student;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne( cascade = CascadeType.REMOVE)
     @JoinColumn(name = "assessment_id")
     private Assessment assessment;
 

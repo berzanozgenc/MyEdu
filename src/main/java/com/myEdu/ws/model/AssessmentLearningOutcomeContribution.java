@@ -24,16 +24,13 @@ public class AssessmentLearningOutcomeContribution {
     @JoinColumn(name = "learning_outcome_id")
     private LearningOutcome learningOutcome;
 
+    @Setter
     @Column(nullable = false)
     private Double contribution;
 
     public AssessmentLearningOutcomeContribution(Assessment assessment, LearningOutcome learningOutcome, Double contribution) {
         this.assessment = assessment;
         this.learningOutcome = learningOutcome;
-        this.contribution = contribution;
-    }
-
-    public void setContribution(Double contribution) {
         this.contribution = contribution;
     }
 

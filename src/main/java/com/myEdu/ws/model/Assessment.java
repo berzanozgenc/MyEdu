@@ -64,7 +64,13 @@ public class Assessment {
     )
     private List<LearningOutcome> learningOutcomes;
 
-    @OneToMany(mappedBy = "assessment", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<StudentAssessment> studentAssessment;
+    @ManyToMany
+    @JoinTable(
+            name = "Student_Assessment",
+            joinColumns = @JoinColumn(name = "assessment_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<Student> students;
+
 
 }

@@ -3,9 +3,11 @@ package com.myEdu.ws.controller;
 import com.myEdu.ws.dto.AssessmentRequest;
 import com.myEdu.ws.model.Assessment;
 import com.myEdu.ws.model.GeneralAssessment;
+import com.myEdu.ws.repository.StudentAssessmentRepository;
 import com.myEdu.ws.service.AssessmentService;
 import com.myEdu.ws.service.GeneralAssessmentService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +22,13 @@ public class AssessmentController {
     private final AssessmentService assessmentService;
     private final GeneralAssessmentService generalAssessmentService;
 
+    private final StudentAssessmentRepository studentAssessmentRepository;
+
     @Autowired
-    public AssessmentController(AssessmentService assessmentService, GeneralAssessmentService generalAssessmentService) {
+    public AssessmentController(AssessmentService assessmentService, GeneralAssessmentService generalAssessmentService, StudentAssessmentRepository studentAssessmentRepository) {
         this.assessmentService = assessmentService;
         this.generalAssessmentService = generalAssessmentService;
+        this.studentAssessmentRepository = studentAssessmentRepository;
     }
 
     @PostMapping("/create-assessment")
@@ -73,7 +78,9 @@ public class AssessmentController {
     }
 
     @DeleteMapping("/delete-assessment/{id}")
+    @Transactional
     public void deleteAssessment(@PathVariable("id") long assessmentId) {
+        studentAssessmentRepository.deleteAllByAssessment(assessmentId);
         assessmentService.deleteAssessmentById(assessmentId);
     }
 

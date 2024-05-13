@@ -73,7 +73,7 @@ public class AssessmentService {
             Double currentContribution = assessment.getContribution();
             Double generalAssessmentTotalContribution = getTotalContributionByGeneralAssessment(assessment.getGeneralAssessment());
 
-            if ((generalAssessmentTotalContribution - currentContribution + newContribution) <= 100) {
+            if ((generalAssessmentTotalContribution - currentContribution + newContribution) <= 1000) {
                 assessment.setContribution(newContribution);
                 assessmentRepository.save(assessment);
             } else {
