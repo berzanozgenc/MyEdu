@@ -30,10 +30,13 @@ public class ProgramOutcomeService {
         this.courseRepository = courseRepository;
     }
 
-    public void calculateAndSetProgramOutcomeTarget(ProgramOutcome programOutcome) {
-        double target = programOutcomeCalculationService.calculateProgramOutcomeTarget(programOutcome);
-        programOutcome.setTarget(target);
-        programOutcomeRepository.save(programOutcome);
+    public void calculateAndSetProgramOutcomeTarget(Long id) {
+        List<ProgramOutcome> programOutcomes = programOutcomeRepository.findByCourseCourseId(id);
+        for (ProgramOutcome programOutcome : programOutcomes){
+            double target = programOutcomeCalculationService.calculateProgramOutcomeTarget(programOutcome);
+            programOutcome.setTarget(target);
+            programOutcomeRepository.save(programOutcome);
+        }
     }
 
     public List<ProgramOutcome> getByCourseId(Long courseId) {

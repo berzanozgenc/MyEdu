@@ -1,7 +1,9 @@
 package com.myEdu.ws.controller;
 
+import com.myEdu.ws.model.Course;
 import com.myEdu.ws.model.LearningOutcome;
 import com.myEdu.ws.model.ProgramOutcome;
+import com.myEdu.ws.repository.CourseRepository;
 import com.myEdu.ws.repository.LearningOutcomeProgramOutcomeRepository;
 import com.myEdu.ws.repository.ProgramOutcomeRepository;
 import com.myEdu.ws.service.LearningOutcomeProgramOutcomeService;
@@ -29,13 +31,16 @@ public class ProgramOutcomeController {
 
     private final ProgramOutcomeRepository programOutcomeRepository;
 
+    private final CourseRepository courseRepository;
+
     @Autowired
-    public ProgramOutcomeController(ProgramOutcomeCalculationService programOutcomeCalculationService, ProgramOutcomeService programOutcomeService, ProgramOutcomeRepository programOutcomeRepository, LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository, LearningOutcomeService learningOutcomeService) {
+    public ProgramOutcomeController(ProgramOutcomeCalculationService programOutcomeCalculationService, ProgramOutcomeService programOutcomeService, ProgramOutcomeRepository programOutcomeRepository, LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository, LearningOutcomeService learningOutcomeService, CourseRepository courseRepository) {
         this.programOutcomeCalculationService = programOutcomeCalculationService;
         this.programOutcomeService = programOutcomeService;
         this.programOutcomeRepository = programOutcomeRepository;
         this.learningOutcomeProgramOutcomeRepository = learningOutcomeProgramOutcomeRepository;
         this.learningOutcomeService = learningOutcomeService;
+        this.courseRepository = courseRepository;
     }
 
     // Tüm program çıktılarını getir
@@ -87,13 +92,10 @@ public class ProgramOutcomeController {
     }
 
     @GetMapping("/{id}/calculate-and-set-target")
-    public ResponseEntity<Double> calculateAndSetTarget(@PathVariable Long id) {
-        ProgramOutcome programOutcome = programOutcomeService.findById(id);
-        if (programOutcome == null) {
-            return ResponseEntity.notFound().build();
-        }
-        programOutcomeService.calculateAndSetProgramOutcomeTarget(programOutcome);
-        return ResponseEntity.ok(programOutcome.getTarget());
+    public ResponseEntity<String> calculateAndSetTarget(@PathVariable Long id) {
+        Optional<Course> course = courseRepository.findById(id);
+        programOutcomeService.calculateAndSetProgramOutcomeTarget(course.get().getCourseId());
+        return ResponseEntity.ok("Başarılı");
     }
 
     @PutMapping("/{id}/calculate-and-set-assessment-value")
