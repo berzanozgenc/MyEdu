@@ -1,7 +1,9 @@
 package com.myEdu.ws.controller;
 
 import com.myEdu.ws.dto.LearningOutcomeRequest;
+import com.myEdu.ws.model.Course;
 import com.myEdu.ws.model.LearningOutcome;
+import com.myEdu.ws.repository.CourseRepository;
 import com.myEdu.ws.repository.LearningOutcomeProgramOutcomeRepository;
 import com.myEdu.ws.repository.LearningOutcomeRepository;
 import com.myEdu.ws.service.AssessmentSumCalculationService;
@@ -30,6 +32,9 @@ public class LearningOutcomeController {
 
     @Autowired
     private LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository;
+
+    @Autowired
+    private CourseRepository courseRepository;
 
     @GetMapping
     public ResponseEntity<List<LearningOutcome>> getAllLearningOutcomes() {
@@ -71,24 +76,24 @@ public class LearningOutcomeController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/{id}/calculate-and-set-assessment-sum")
+    @GetMapping("course/{id}/calculate-and-set-assessment-sum")
     public ResponseEntity<String> calculateAndSetAssessmentSumForLearningOutcome(@PathVariable Long id) {
-        LearningOutcome learningOutcome = learningOutcomeRepository.findById(id).orElse(null);
-        if (learningOutcome == null) {
+        Course course = courseRepository.findById(id).orElse(null);
+        if (course == null) {
             return ResponseEntity.notFound().build();
         }
-        assessmentSumCalculationService.calculateAndSetAssessmentSum(); // Yeni yöntemi kullanarak assessmentSum hesaplayın ve kaydedin
-        return ResponseEntity.ok("Assessment sum calculated and set successfully for LearningOutcome with ID: " + id);
+        assessmentSumCalculationService.calculateAndSetAssessmentSum(id); // Yeni yöntemi kullanarak assessmentSum hesaplayın ve kaydedin
+        return ResponseEntity.ok("Assessment sum calculated and set successfully for Course with ID: " + id);
     }
 
-    @PostMapping("/{id}/calculate-and-set-score-sum")
+    @PostMapping("course/{id}/calculate-and-set-score-sum")
     public ResponseEntity<String> calculateAndSetScoreSumForLearningOutcome(@PathVariable Long id) {
-        LearningOutcome learningOutcome = learningOutcomeRepository.findById(id).orElse(null);
-        if (learningOutcome == null) {
+        Course course = courseRepository.findById(id).orElse(null);
+        if (course == null) {
             return ResponseEntity.notFound().build();
         }
-        assessmentSumCalculationService.calculateAndSetScoreSumAndLevelOfProvisionForLearningOutcome(learningOutcome);
-        return ResponseEntity.ok("Score sum calculated and set successfully for LearningOutcome with ID: " + id);
+        assessmentSumCalculationService.calculateAndSetScoreSumAndLevelOfProvisionForLearningOutcome(id);
+        return ResponseEntity.ok("Score sum calculated and set successfully for Course with ID: " + id);
     }
 
 }

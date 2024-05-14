@@ -38,6 +38,8 @@ public class StudentAssessmentService {
             relationship.setAssessment(assessment);
             relationship.setStudent(student);
             relationship.setGrade(grade);
+            studentAssessmentRepository.save(relationship);
+            updateAverageGradesForAssessments();
             return studentAssessmentRepository.save(relationship);
         }
         return null;
@@ -80,9 +82,11 @@ public class StudentAssessmentService {
                 totalGrade += studentAssessment.getGrade();
                 count++;
             }
-            double averageGrade = count > 0 ? totalGrade / count : 0;
-            assessment.setAverageGrade(averageGrade);
-            assessmentRepository.save(assessment);
+            if(count != 0){
+                double averageGrade = totalGrade / count;
+                assessment.setAverageGrade(averageGrade);
+                assessmentRepository.save(assessment);
+            }
         }
     }
 

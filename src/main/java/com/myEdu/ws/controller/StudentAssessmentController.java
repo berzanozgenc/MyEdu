@@ -34,6 +34,7 @@ public class StudentAssessmentController {
             else {
                 record.setGrade(request.getGrade());
                 studentAssessmentService.updateGrade(record);
+                studentAssessmentService.updateAverageGradesForAssessments();
                 updated = true;
                 created = false;
             }

@@ -35,7 +35,7 @@ public class GeneralAssessment {
     @JsonIgnore
     private Course course;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Assessment> assessments;
 
 }

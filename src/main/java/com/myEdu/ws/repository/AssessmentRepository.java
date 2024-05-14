@@ -12,6 +12,10 @@ import java.util.List;
 public interface AssessmentRepository extends JpaRepository<Assessment, Long> {
     List<Assessment> findByGeneralAssessment(GeneralAssessment generalAssessment);
     List<Assessment> findByGeneralAssessment_GeneralAssesmentId(Long generalAssesmentId);
+    @Query("SELECT a FROM Assessment a WHERE a.generalAssessment.generalAssesmentId = :generalAssessmentId")
+    List<Assessment> findAssessmentsByGeneralAssessmentId(@Param("generalAssessmentId") Long generalAssessmentId);
+    @Query("SELECT a.generalAssessment FROM Assessment a WHERE a.id = :assessmentId")
+    GeneralAssessment findGeneralAssessmentByAssessmentId(@Param("assessmentId") Long assessmentId);
 
     @Modifying
     @Query("DELETE FROM Assessment WHERE generalAssessment.generalAssesmentId = :generalAssesmentId")
