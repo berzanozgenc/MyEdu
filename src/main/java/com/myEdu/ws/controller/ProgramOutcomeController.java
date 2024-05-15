@@ -91,30 +91,30 @@ public class ProgramOutcomeController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{id}/calculate-and-set-target")
+    @GetMapping("course/{id}/calculate-and-set-target")
     public ResponseEntity<String> calculateAndSetTarget(@PathVariable Long id) {
         Optional<Course> course = courseRepository.findById(id);
         programOutcomeService.calculateAndSetProgramOutcomeTarget(course.get().getCourseId());
         return ResponseEntity.ok("Başarılı");
     }
 
-    @PutMapping("/{id}/calculate-and-set-assessment-value")
+    @PutMapping("course/{id}/calculate-and-set-assessment-value")
     public ResponseEntity<String> calculateAndSetAssessmentValueForProgramOutcome(@PathVariable Long id) {
-        ProgramOutcome programOutcome = programOutcomeRepository.findById(id).orElse(null);
-        if (programOutcome == null) {
+        Course course = courseRepository.findById(id).orElse(null);
+        if (course == null) {
             return ResponseEntity.notFound().build();
         }
-        programOutcomeService.calculateAndSetAssessmentValueForProgramOutcome(programOutcome);
+        programOutcomeService.calculateAndSetAssessmentValueForProgramOutcome(course.getCourseId());
         return ResponseEntity.ok("Assessment value calculated and set successfully for ProgramOutcome with ID: " + id);
     }
 
-    @PostMapping("/{id}/calculate-and-set-score-and-level-of-provision")
+    @PostMapping("course/{id}/calculate-and-set-score-and-level-of-provision")
     public ResponseEntity<String> calculateAndSetScoreAndLevelOfProvisionForProgramOutcome(@PathVariable Long id) {
-        ProgramOutcome programOutcome = programOutcomeRepository.findById(id).orElse(null);
-        if (programOutcome == null) {
+        Course course = courseRepository.findById(id).orElse(null);
+        if (course == null) {
             return ResponseEntity.notFound().build();
         }
-        programOutcomeService.calculateAndSetScoreAndLevelOfProvisionForProgramOutcome(programOutcome);
+        programOutcomeService.calculateAndSetScoreAndLevelOfProvisionForProgramOutcome(course.getCourseId());
         return ResponseEntity.ok("Score and level of provision calculated and set successfully for ProgramOutcome with ID: " + id);
     }
 
