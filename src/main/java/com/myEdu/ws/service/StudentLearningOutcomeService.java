@@ -16,86 +16,75 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class StudentLearningOutcomeService {
 
-    @Autowired
     private final StudentLearningOutcomeRepository studentLearningOutcomeRepository;
-
-    @Autowired
     private final StudentRepository studentRepository;
-
-    @Autowired
-    private final LearningOutcomeRepository learningOutcomeRepository ;
-
-    @Autowired
+    private final LearningOutcomeRepository learningOutcomeRepository;
     private final AssessmentLearningOutcomeContributionRepository assessmentLearningOutcomeContributionRepository;
-
-    @Autowired
-    private  final AssessmentRepository assessmentRepository;
-
-    @Autowired
-    private  final StudentAssessmentRepository studentAssessmentRepository;
+    private final AssessmentRepository assessmentRepository;
+    private final StudentAssessmentRepository studentAssessmentRepository;
 
     public String createStudentLearningOutcome(Long userId, Long learningOutcomeId) {
         Student student = studentRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Student not found with id: " + userId));
-        Optional<LearningOutcome> learningOutcomeOpt = learningOutcomeRepository.findById(learningOutcomeId);
-        LearningOutcome learningOutcome = learningOutcomeOpt.get();
-            double levelOfProvision = 0;
-            StudentLearningOutcome studentLearningOutcome = new StudentLearningOutcome();
-            studentLearningOutcome.setStudent(student);
-            studentLearningOutcome.setLearningOutcome(learningOutcome);
-            levelOfProvision = calculateLevelOfProvision(student,learningOutcome);
-            studentLearningOutcome.setLevelOfProvision(levelOfProvision);
-            studentLearningOutcomeRepository.save(studentLearningOutcome);
+        LearningOutcome learningOutcome = learningOutcomeRepository.findById(learningOutcomeId)
+                .orElseThrow(() -> new RuntimeException("LearningOutcome not found with id: " + learningOutcomeId));
 
-        return ("Ok");
+        StudentLearningOutcome studentLearningOutcome = new StudentLearningOutcome();
+        studentLearningOutcome.setStudent(student);
+        studentLearningOutcome.setLearningOutcome(learningOutcome);
+        double levelOfProvision = calculateLevelOfProvision(student, learningOutcome, studentLearningOutcome);
+        studentLearningOutcome.setLevelOfProvision(levelOfProvision);
+        studentLearningOutcomeRepository.save(studentLearningOutcome);
 
+        return "Ok";
     }
 
     public String updateStudentLearningOutcome(Long userId, Long learningOutcomeId) {
         Student student = studentRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Student not found with id: " + userId));
-        Optional<LearningOutcome> learningOutcomeOpt = learningOutcomeRepository.findById(learningOutcomeId);
-        LearningOutcome learningOutcome = learningOutcomeOpt.get();
+        LearningOutcome learningOutcome = learningOutcomeRepository.findById(learningOutcomeId)
+                .orElseThrow(() -> new RuntimeException("LearningOutcome not found with id: " + learningOutcomeId));
+
         StudentLearningOutcome studentLearningOutcome = studentLearningOutcomeRepository.findByStudentUserIdAndLearningOutcomeId(userId, learningOutcomeId);
-        double levelOfProvision = 0;
-        studentLearningOutcome.setStudent(student);
-        studentLearningOutcome.setLearningOutcome(learningOutcome);
-        levelOfProvision = calculateLevelOfProvision(student,learningOutcome);
+        double levelOfProvision = calculateLevelOfProvision(student, learningOutcome, studentLearningOutcome);
         studentLearningOutcome.setLevelOfProvision(levelOfProvision);
         studentLearningOutcomeRepository.save(studentLearningOutcome);
 
-        return ("Ok");
-
+        return "Ok";
     }
 
-    public double calculateLevelOfProvision(Student student, LearningOutcome learningOutcome){
-            List<AssessmentLearningOutcomeContribution> mappings = assessmentLearningOutcomeContributionRepository.findByLearningOutcome(learningOutcome);
-            double scoreSum = 0.0;
-            for (AssessmentLearningOutcomeContribution mapping : mappings) {
-                Assessment assessment = mapping.getAssessment();
-                GeneralAssessment generalAssessment = assessmentRepository.findGeneralAssessmentByAssessmentId(assessment.getAssessmentId());
-                double X = calculateTotalContribution(generalAssessment);
-                double Y = mapping.getContribution();
-                double Z = generalAssessment.getTotalContribution();
-                double contributionPercentage = (assessment.getContribution() / X) * Y * (Z / 100);
-                StudentAssessment studentAssessment = studentAssessmentRepository.findByStudentUserIdAndAssessmentAssessmentId(student.getUserId(),assessment.getAssessmentId());
-                double E = studentAssessment.getGrade();
-                double F = assessment.getContribution();
-                double scoreToAdd = E * contributionPercentage / F;
+    public double calculateLevelOfProvision(Student student, LearningOutcome learningOutcome, StudentLearningOutcome studentLearningOutcome) {
+        List<AssessmentLearningOutcomeContribution> mappings = assessmentLearningOutcomeContributionRepository.findByLearningOutcome(learningOutcome);
+        double scoreSum = 0.0;
+        for (AssessmentLearningOutcomeContribution mapping : mappings) {
+            Assessment assessment = mapping.getAssessment();
+            GeneralAssessment generalAssessment = assessmentRepository.findGeneralAssessmentByAssessmentId(assessment.getAssessmentId());
+            double X = calculateTotalContribution(generalAssessment);
+            double Y = mapping.getContribution();
+            double Z = generalAssessment.getTotalContribution();
+            double contributionPercentage = (assessment.getContribution() / X) * Y * (Z / 100);
+            StudentAssessment studentAssessment = studentAssessmentRepository.findByStudentUserIdAndAssessmentAssessmentId(student.getUserId(), assessment.getAssessmentId());
+            double E = studentAssessment.getGrade();
+            double F = assessment.getContribution();
+            double scoreToAdd = E * contributionPercentage / F;
 
-                scoreSum += scoreToAdd;
-            }
+            scoreSum += scoreToAdd;
+        }
+
+        studentLearningOutcome.setScoreSum(scoreSum);
         return scoreSum / learningOutcome.getAssessmentSum() * 100;
-
     }
 
     private double calculateTotalContribution(GeneralAssessment generalAssessment) {
         double totalContribution = 0.0;
-        List<Assessment> assessments =  assessmentRepository.findAssessmentsByGeneralAssessmentId(generalAssessment.getGeneralAssesmentId());
+        List<Assessment> assessments = assessmentRepository.findAssessmentsByGeneralAssessmentId(generalAssessment.getGeneralAssesmentId());
         for (Assessment assessment : assessments) {
             totalContribution += assessment.getContribution();
         }
         return totalContribution;
     }
 
+    public List<StudentLearningOutcome> getByUserIdAndLearningOutcomeIds(Long userId, List<Long> learningOutcomeIds) {
+        return studentLearningOutcomeRepository.findByStudentUserIdAndLearningOutcomeIdIn(userId, learningOutcomeIds);
+    }
 }

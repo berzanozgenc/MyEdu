@@ -3,6 +3,7 @@ package com.myEdu.ws.controller;
 import com.myEdu.ws.dto.StudentLearningOutcomeRequest;
 import com.myEdu.ws.model.LearningOutcome;
 import com.myEdu.ws.model.StudentLearningOutcome;
+import com.myEdu.ws.model.StudentProgramOutcome;
 import com.myEdu.ws.repository.StudentLearningOutcomeRepository;
 import com.myEdu.ws.service.StudentLearningOutcomeService;
 import lombok.RequiredArgsConstructor;
@@ -47,5 +48,10 @@ public class StudentLearningOutcomeController {
             return new ResponseEntity<>("Changes are persisted", HttpStatus.OK);
         else
             return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/user/{userId}/learning-outcome")
+    public List<StudentLearningOutcome> getLearningOutcomesForUser(@PathVariable Long userId, @RequestBody List<Long> learningOutcomeIds) {
+        return studentLearningOutcomeService.getByUserIdAndLearningOutcomeIds(userId, learningOutcomeIds);
     }
 }

@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudentLearningOutcome {
+public class StudentProgramOutcome {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,13 +24,10 @@ public class StudentLearningOutcome {
     private User student;
 
     @ManyToOne( cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "learning_outcome_id")
-    private LearningOutcome learningOutcome;
+    @JoinColumn(name = "program_outcome_id")
+    private ProgramOutcome programOutcome;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private double levelOfProvision;
-
-    @Column(nullable = false)
-    private Double scoreSum = 0.0;
 
 }
