@@ -1,5 +1,6 @@
 package com.myEdu.ws.repository;
 
+import com.myEdu.ws.model.Course;
 import com.myEdu.ws.model.Student;
 import com.myEdu.ws.model.StudentCourse;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,4 +13,6 @@ import java.util.List;
 public interface StudentCourseRepository extends JpaRepository<StudentCourse, Long> {
     @Query("SELECT sc.student FROM StudentCourse sc WHERE sc.course.id = :courseId")
     List<Student> findStudentsByCourseId(Long courseId);
+
+    void deleteAllByStudentAndCourse(Student student, Course course);
 }

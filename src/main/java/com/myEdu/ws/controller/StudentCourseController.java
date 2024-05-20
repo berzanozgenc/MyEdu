@@ -48,6 +48,17 @@ public class StudentCourseController {
         }
         return new ResponseEntity<>(students, HttpStatus.OK);
     }
+
+    @DeleteMapping("student/{studentId}/course/{courseId}")
+    public ResponseEntity<String> deleteStudentCourse(@PathVariable Long studentId, @PathVariable Long courseId) {
+        try {
+            studentCourseService.deleteByStudentUserIdAndCourseCourseId(studentId, courseId);
+            return ResponseEntity.ok("Student course deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error deleting student course: " + e.getMessage());
+        }
+    }
+
 }
 
 @Setter

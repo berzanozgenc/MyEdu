@@ -6,6 +6,7 @@ import com.myEdu.ws.model.StudentCourse;
 import com.myEdu.ws.repository.CourseRepository;
 import com.myEdu.ws.repository.StudentCourseRepository;
 import com.myEdu.ws.repository.StudentRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,16 @@ public class StudentCourseService {
 
     public List<Student> getStudentsByCourseId(Long courseId) {
         return studentCourseRepository.findStudentsByCourseId(courseId);
+    }
+
+    @Transactional
+    public void deleteByStudentUserIdAndCourseCourseId(Long studentId, Long courseId) {
+        Student s = studentRepository.findById(studentId).get();
+        Course c = courseRepository.findById(courseId).get();
+        System.out.println(s.getStudentNumber());
+        System.out.println("*****************");
+        System.out.println(c.getCourseName());
+        studentCourseRepository.deleteAllByStudentAndCourse(s, c);
     }
 
 }
