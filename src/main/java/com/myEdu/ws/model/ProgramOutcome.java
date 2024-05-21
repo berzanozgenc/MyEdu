@@ -22,7 +22,10 @@ public class ProgramOutcome {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String description;
-    private String department;//eklendi,
+    private String department;//eklendi
+
+    @Column
+    private double number;
 
     @Column(nullable = true)
     private double target;

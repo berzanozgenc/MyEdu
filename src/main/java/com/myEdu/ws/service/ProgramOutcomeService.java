@@ -72,6 +72,7 @@ public class ProgramOutcomeService {
                 .orElseThrow(() -> new NotFoundException("ProgramOutcome not found with id: " + id));
 
         existingProgramOutcome.setDescription(updatedProgramOutcome.getDescription());
+        existingProgramOutcome.setNumber(updatedProgramOutcome.getNumber());
         existingProgramOutcome.setDepartment(updatedProgramOutcome.getDepartment());
 
         return programOutcomeRepository.save(existingProgramOutcome);

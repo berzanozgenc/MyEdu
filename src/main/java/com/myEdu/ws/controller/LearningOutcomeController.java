@@ -3,9 +3,7 @@ package com.myEdu.ws.controller;
 import com.myEdu.ws.dto.LearningOutcomeRequest;
 import com.myEdu.ws.model.Course;
 import com.myEdu.ws.model.LearningOutcome;
-import com.myEdu.ws.repository.CourseRepository;
-import com.myEdu.ws.repository.LearningOutcomeProgramOutcomeRepository;
-import com.myEdu.ws.repository.LearningOutcomeRepository;
+import com.myEdu.ws.repository.*;
 import com.myEdu.ws.service.AssessmentSumCalculationService;
 import com.myEdu.ws.service.LearningOutcomeService;
 import jakarta.transaction.Transactional;
@@ -35,6 +33,11 @@ public class LearningOutcomeController {
 
     @Autowired
     private CourseRepository courseRepository;
+    @Autowired
+    private StudentLearningOutcomeRepository studentLearningOutcomeRepository;
+
+    @Autowired
+    private AssessmentLearningOutcomeContributionRepository assessmentLearningOutcomeContributionRepository;
 
     @GetMapping
     public ResponseEntity<List<LearningOutcome>> getAllLearningOutcomes() {
@@ -72,6 +75,8 @@ public class LearningOutcomeController {
     @Transactional
     public ResponseEntity<Void> deleteLearningOutcome(@PathVariable Long id) {
         learningOutcomeProgramOutcomeRepository.deleteAllByLearningOutcome(id);
+        studentLearningOutcomeRepository.deleteAllByLearningOutcome(id);
+        assessmentLearningOutcomeContributionRepository.deleteAllByLearningOutcome(id);
         learningOutcomeService.deleteLearningOutcome(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

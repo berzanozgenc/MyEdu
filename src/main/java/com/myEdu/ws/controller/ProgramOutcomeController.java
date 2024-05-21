@@ -6,6 +6,7 @@ import com.myEdu.ws.model.ProgramOutcome;
 import com.myEdu.ws.repository.CourseRepository;
 import com.myEdu.ws.repository.LearningOutcomeProgramOutcomeRepository;
 import com.myEdu.ws.repository.ProgramOutcomeRepository;
+import com.myEdu.ws.repository.StudentProgramOutcomeRepository;
 import com.myEdu.ws.service.LearningOutcomeProgramOutcomeService;
 import com.myEdu.ws.service.LearningOutcomeService;
 import com.myEdu.ws.service.ProgramOutcomeCalculationService;
@@ -33,14 +34,17 @@ public class ProgramOutcomeController {
 
     private final CourseRepository courseRepository;
 
+    private final StudentProgramOutcomeRepository studentProgramOutcomeRepository;
+
     @Autowired
-    public ProgramOutcomeController(ProgramOutcomeCalculationService programOutcomeCalculationService, ProgramOutcomeService programOutcomeService, ProgramOutcomeRepository programOutcomeRepository, LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository, LearningOutcomeService learningOutcomeService, CourseRepository courseRepository) {
+    public ProgramOutcomeController(ProgramOutcomeCalculationService programOutcomeCalculationService, ProgramOutcomeService programOutcomeService, ProgramOutcomeRepository programOutcomeRepository, LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository, LearningOutcomeService learningOutcomeService, CourseRepository courseRepository, StudentProgramOutcomeRepository studentProgramOutcomeRepository) {
         this.programOutcomeCalculationService = programOutcomeCalculationService;
         this.programOutcomeService = programOutcomeService;
         this.programOutcomeRepository = programOutcomeRepository;
         this.learningOutcomeProgramOutcomeRepository = learningOutcomeProgramOutcomeRepository;
         this.learningOutcomeService = learningOutcomeService;
         this.courseRepository = courseRepository;
+        this.studentProgramOutcomeRepository = studentProgramOutcomeRepository;
     }
 
     // Tüm program çıktılarını getir
@@ -87,6 +91,7 @@ public class ProgramOutcomeController {
     @Transactional
     public ResponseEntity<Void> deleteProgramOutcome(@PathVariable Long id) {
         learningOutcomeProgramOutcomeRepository.deleteAllByProgramOutcome(id);
+        studentProgramOutcomeRepository.deleteAllByProgramOutcome(id);
         programOutcomeService.deleteProgramOutcome(id);
         return ResponseEntity.noContent().build();
     }
