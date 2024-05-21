@@ -37,6 +37,10 @@ public class Course {
     @Column(nullable = false)
     private int section;
 
+    @ManyToOne
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department;
+
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GeneralAssessment> generalAssessment;
 

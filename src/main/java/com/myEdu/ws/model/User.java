@@ -27,6 +27,10 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @ManyToOne
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department;
+
     @Column(nullable = false)
     private int statusCode;
 

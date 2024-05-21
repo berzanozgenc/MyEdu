@@ -2,10 +2,13 @@ package com.myEdu.ws.service;
 
 import com.myEdu.ws.dto.CourseDto;
 import com.myEdu.ws.model.Course;
+import com.myEdu.ws.model.Department;
 import com.myEdu.ws.model.GeneralAssessment;
 import com.myEdu.ws.repository.CourseRepository;
+import com.myEdu.ws.repository.DepartmentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,18 +19,10 @@ import java.util.Optional;
 @AllArgsConstructor
 public class CourseService {
 
+    @Autowired
+    DepartmentRepository departmentRepository;
+
     private CourseRepository courseRepository;
-
-    public List<String> getAllCourseNameAndCode() {
-        List<Course> courses = courseRepository.findAll();
-        List<String> names = new ArrayList<>();
-
-        for(Course c: courses) {
-            names.add(c.getCourseName() + "-" + c.getCode());
-        }
-
-        return names;
-    }
 
     public Long createCourse(CourseDto courseDto) {
         Course course = new Course();
@@ -37,9 +32,10 @@ public class CourseService {
         course.setCredit(courseDto.getCredit());
         course.setSection(courseDto.getSection());
         course.setSemester(courseDto.getSemester());
+        course.setDepartment(courseDto.getDepartment());
 
         GeneralAssessment generalAssessment = new GeneralAssessment();
-        generalAssessment.setName("quiz");
+        generalAssessment.setName("Quiz");
         generalAssessment.setTotalContribution(20d);
         generalAssessment.setCourse(course);
         List<GeneralAssessment> generalAssessmentList = new ArrayList<>();
@@ -72,5 +68,15 @@ public class CourseService {
 
     public List<Course> getAllCourses() {
         return courseRepository.findAll();
+    }
+
+    public List<Course> getDepartmentCourses(Long departmentId) {
+        Optional<Department> departmentOptional = departmentRepository.findById(departmentId);
+        if(departmentOptional.isPresent()){
+            Department department = departmentOptional.get();
+            return courseRepository.findAllByDepartment(department);
+        }
+        else
+            return null;
     }
 }

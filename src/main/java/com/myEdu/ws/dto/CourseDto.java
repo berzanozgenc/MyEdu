@@ -1,5 +1,6 @@
 package com.myEdu.ws.dto;
 
+import com.myEdu.ws.model.Department;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,4 +17,5 @@ public class CourseDto {
     private int ects;
     private int credit;
     private int section;
+    private Department department;
 }

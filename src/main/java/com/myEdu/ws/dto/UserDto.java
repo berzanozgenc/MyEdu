@@ -1,5 +1,6 @@
 package com.myEdu.ws.dto;
 
+import com.myEdu.ws.model.Department;
 import com.myEdu.ws.model.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +22,9 @@ public class UserDto {
     private String password;
     private String firstName;
     private String lastName;
+    private Department department;
     private int statusCode;
+
 
     public UserDto(User inDB) {
         this.userId = inDB.getUserId();
@@ -30,6 +33,7 @@ public class UserDto {
         this.firstName = inDB.getFirstName();
         this.lastName = inDB.getLastName();
         this.statusCode = inDB.getStatusCode();
+        this.department = inDB.getDepartment();
     }
 }
 

@@ -35,6 +35,7 @@ public class StudentService {
         student.setStatusCode(studentDto.getStatusCode());
         student.setPassword(encodedPassword);
         student.setStudentNumber(studentDto.getStudentNumber());
+        student.setDepartment(studentDto.getDepartment());
         return studentRepository.save(student);
     }
 
