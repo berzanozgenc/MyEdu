@@ -6,11 +6,13 @@ import com.myEdu.ws.model.StudentCourse;
 import com.myEdu.ws.repository.CourseRepository;
 import com.myEdu.ws.repository.StudentCourseRepository;
 import com.myEdu.ws.repository.StudentRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentCourseService {
@@ -54,4 +56,15 @@ public class StudentCourseService {
         studentCourseRepository.deleteAllByStudentAndCourse(s, c);
     }
 
+    public List<Course> getCoursesByStudentId(Long studentId) {
+        Optional<Student> optionalStudent = studentRepository.findById(studentId);
+
+        if (optionalStudent.isPresent()) {
+            Student student = optionalStudent.get();
+            return studentCourseRepository.findCoursesByStudent(student);
+        } else {
+            // İlgili öğrenci bulunamadı, uygun bir hata mesajı döndürebilirsiniz.
+            throw new EntityNotFoundException("Öğrenci bulunamadı: " + studentId);
+        }
+    }
 }

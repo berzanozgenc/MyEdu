@@ -1,5 +1,6 @@
 package com.myEdu.ws.controller;
 
+import com.myEdu.ws.model.Course;
 import com.myEdu.ws.service.StudentCourseService;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,6 +48,15 @@ public class StudentCourseController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(students, HttpStatus.OK);
+    }
+
+    @GetMapping("/{studentId}/courses")
+    public ResponseEntity<List<Course>> getCoursesByStudentId(@PathVariable Long studentId) {
+        List<Course> courses = studentCourseService.getCoursesByStudentId(studentId);
+        if (courses.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
     @DeleteMapping("student/{studentId}/course/{courseId}")
