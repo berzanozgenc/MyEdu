@@ -3,6 +3,7 @@ package com.myEdu.ws.service;
 import com.myEdu.ws.dto.CourseDto;
 import com.myEdu.ws.model.*;
 import com.myEdu.ws.repository.*;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +77,7 @@ public class CourseService {
         return courseRepository.save(existingCourse);
     }
 
+    @Transactional
     public void deleteCourse(Long courseId) {
         Optional<Course> optional = courseRepository.findById(courseId);
         List<GeneralAssessment> generalAssessments = generalAssessmentRepository.findByCourse(optional.get());
