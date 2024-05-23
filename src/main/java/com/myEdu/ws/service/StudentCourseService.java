@@ -1,11 +1,7 @@
 package com.myEdu.ws.service;
 
-import com.myEdu.ws.model.Course;
-import com.myEdu.ws.model.Student;
-import com.myEdu.ws.model.StudentCourse;
-import com.myEdu.ws.repository.CourseRepository;
-import com.myEdu.ws.repository.StudentCourseRepository;
-import com.myEdu.ws.repository.StudentRepository;
+import com.myEdu.ws.model.*;
+import com.myEdu.ws.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +16,19 @@ public class StudentCourseService {
     private final StudentRepository studentRepository;
     private final CourseRepository courseRepository;
     private final StudentCourseRepository studentCourseRepository;
+    private final GeneralAssessmentRepository generalAssessmentRepository;
+    private final AssessmentRepository assessmentRepository;
+    private final StudentAssessmentRepository studentAssessmentRepository;
 
     @Autowired
     public StudentCourseService(StudentRepository studentRepository, CourseRepository courseRepository,
-                                StudentCourseRepository studentCourseRepository) {
+                                StudentCourseRepository studentCourseRepository, GeneralAssessmentRepository generalAssessmentRepository, AssessmentRepository assessmentRepository, StudentAssessmentRepository studentAssessmentRepository) {
         this.studentRepository = studentRepository;
         this.courseRepository = courseRepository;
         this.studentCourseRepository = studentCourseRepository;
+        this.generalAssessmentRepository = generalAssessmentRepository;
+        this.assessmentRepository = assessmentRepository;
+        this.studentAssessmentRepository = studentAssessmentRepository;
     }
 
     public void createStudentCourseRelationship(Long studentId, Long courseId) {
@@ -50,9 +52,13 @@ public class StudentCourseService {
     public void deleteByStudentUserIdAndCourseCourseId(Long studentId, Long courseId) {
         Student s = studentRepository.findById(studentId).get();
         Course c = courseRepository.findById(courseId).get();
-        System.out.println(s.getStudentNumber());
-        System.out.println("*****************");
-        System.out.println(c.getCourseName());
+        List<GeneralAssessment> generalAssessments = generalAssessmentRepository.findByCourse_courseId(c.getCourseId());
+        for (GeneralAssessment generalAssessment : generalAssessments){
+            List<Assessment> assessments = assessmentRepository.findByGeneralAssessment(generalAssessment);
+            for (Assessment assessment : assessments){
+                studentAssessmentRepository.deleteStudentAssessment(s.getUserId(),assessment.getAssessmentId());
+            }
+        }
         studentCourseRepository.deleteAllByStudentAndCourse(s, c);
     }
 
