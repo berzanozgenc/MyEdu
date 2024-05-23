@@ -3,6 +3,7 @@ package com.myEdu.ws.service;
 import com.myEdu.ws.model.Assessment;
 import com.myEdu.ws.model.Course;
 import com.myEdu.ws.model.GeneralAssessment;
+import com.myEdu.ws.repository.AssessmentRepository;
 import com.myEdu.ws.repository.CourseRepository;
 import com.myEdu.ws.repository.GeneralAssessmentRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,10 +19,16 @@ public class GeneralAssessmentService {
     private final GeneralAssessmentRepository generalAssesmentRepository;
     private final CourseRepository courseRepository;
 
+    private final AssessmentRepository assessmentRepository;
+
+    private final AssessmentService assessmentService;
+
     @Autowired
-    public GeneralAssessmentService(GeneralAssessmentRepository generalAssesmentRepository, CourseRepository courseRepository) {
+    public GeneralAssessmentService(GeneralAssessmentRepository generalAssesmentRepository, CourseRepository courseRepository, AssessmentRepository assessmentRepository, AssessmentService assessmentService) {
         this.generalAssesmentRepository = generalAssesmentRepository;
         this.courseRepository = courseRepository;
+        this.assessmentRepository = assessmentRepository;
+        this.assessmentService = assessmentService;
     }
 
     private boolean isContributionUnderLimit(double totalContribution) {
@@ -49,6 +56,11 @@ public class GeneralAssessmentService {
 
     public void deleteGeneralAssesmentById(long generalAssesmentId) {
         try {
+            Optional<GeneralAssessment> generalAssessment = generalAssesmentRepository.findById(generalAssesmentId);
+            List<Assessment> assessments = assessmentRepository.findByGeneralAssessment(generalAssessment.get());
+            for (Assessment assessment: assessments){
+                assessmentService.deleteAssessmentById(assessment.getAssessmentId());
+            }
             generalAssesmentRepository.deleteById(generalAssesmentId);
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException("GeneralAssessment not found with id: " + generalAssesmentId);
