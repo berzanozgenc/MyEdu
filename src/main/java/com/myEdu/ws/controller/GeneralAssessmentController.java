@@ -67,11 +67,11 @@ public class GeneralAssessmentController {
     }
 
     @PutMapping("/updateTotalContributionForCourse/{courseId}")
-    public ResponseEntity<String> updateTotalContributionForCourse(@PathVariable Long courseId, @RequestParam long generalAssesmentId, @RequestParam double newAssesmentContribution) {
+    public ResponseEntity<String> updateTotalContributionForCourse(@PathVariable Long courseId, @RequestParam long generalAssesmentId, @RequestParam double newAssesmentContribution, @RequestParam String newAssessmentName) {
         Optional<Course> course = courseRepository.findById(courseId);
 
         if (course.isPresent()) {
-            generalAssesmentService.updateTotalContributionForCourse(course.get(), generalAssesmentId, newAssesmentContribution);
+            generalAssesmentService.updateTotalContributionForCourse(course.get(), generalAssesmentId, newAssesmentContribution, newAssessmentName);
             return ResponseEntity.ok("Total contribution updated successfully for Course ID: " + courseId);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course with ID: " + courseId + " not found");

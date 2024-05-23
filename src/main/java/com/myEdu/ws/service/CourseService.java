@@ -1,11 +1,8 @@
 package com.myEdu.ws.service;
 
 import com.myEdu.ws.dto.CourseDto;
-import com.myEdu.ws.model.Course;
-import com.myEdu.ws.model.Department;
-import com.myEdu.ws.model.GeneralAssessment;
-import com.myEdu.ws.repository.CourseRepository;
-import com.myEdu.ws.repository.DepartmentRepository;
+import com.myEdu.ws.model.*;
+import com.myEdu.ws.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +18,24 @@ public class CourseService {
 
     @Autowired
     DepartmentRepository departmentRepository;
+
+    @Autowired
+    GeneralAssessmentRepository generalAssessmentRepository;
+
+    @Autowired
+    GeneralAssessmentService generalAssessmentService;
+
+    @Autowired
+    LearningOutcomeRepository learningOutcomeRepository;
+
+    @Autowired
+    LearningOutcomeService learningOutcomeService;
+
+    @Autowired
+    ProgramOutcomeRepository programOutcomeRepository;
+
+    @Autowired
+    ProgramOutcomeService programOutcomeService;
 
     private CourseRepository courseRepository;
 
@@ -63,6 +78,18 @@ public class CourseService {
 
     public void deleteCourse(Long courseId) {
         Optional<Course> optional = courseRepository.findById(courseId);
+        List<GeneralAssessment> generalAssessments = generalAssessmentRepository.findByCourse(optional.get());
+        for (GeneralAssessment generalAssessment : generalAssessments){
+            generalAssessmentService.deleteGeneralAssesmentById(generalAssessment.getGeneralAssesmentId());
+        }
+        List<LearningOutcome> learningOutcomes = learningOutcomeRepository.findByCourseId(courseId);
+        for (LearningOutcome learningOutcome : learningOutcomes){
+            learningOutcomeService.deleteLearningOutcome(learningOutcome.getId());
+        }
+        List<ProgramOutcome> programOutcomes = programOutcomeRepository.findByCourseCourseId(courseId);
+        for (ProgramOutcome programOutcome: programOutcomes){
+            programOutcomeService.deleteProgramOutcome(programOutcome.getId());
+        }
         optional.ifPresent(course -> courseRepository.delete(course));
     }
 

@@ -87,7 +87,7 @@ public class GeneralAssessmentService {
         return generalAssesmentRepository.findAll();
     }
 
-    public void updateTotalContributionForCourse(Course course, long generalAssessmentId, double newAssessmentContribution) {
+    public void updateTotalContributionForCourse(Course course, long generalAssessmentId, double newAssessmentContribution, String newAssessmentName ) {
         Optional<GeneralAssessment> existingAssessment = generalAssesmentRepository.findById(generalAssessmentId);
 
         if (existingAssessment.isPresent()) {
@@ -102,6 +102,7 @@ public class GeneralAssessmentService {
 
             if (isContributionUnderLimit(totalContribution + newAssessmentContribution)) {
                 assessmentToUpdate.setTotalContribution(newAssessmentContribution);
+                assessmentToUpdate.setName(newAssessmentName);
                 generalAssesmentRepository.save(assessmentToUpdate);
             } else {
                 throw new IllegalArgumentException("Toplam değerlendirme katkısı limiti aşıldı!");
