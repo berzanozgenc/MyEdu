@@ -40,11 +40,22 @@ public class UserCourseRegistrationController {
         return ResponseEntity.ok("User course registration deleted successfully");
     }
 
+    @DeleteMapping("delete/instructor/{courseId}")
+    public ResponseEntity<String> deleteUserCourseRegistrationByCourseId(@PathVariable Long courseId) {
+        userCourseRegistrationService.deleteUserCourseRegistrationByCourseId(courseId);
+        return ResponseEntity.ok("User course registration deleted successfully");
+    }
+
     @GetMapping("/user/{userId}/courses")
     public ResponseEntity<List<UserCourseRegistration>> getUserCourseRegistrationsByUserId(@PathVariable Long userId) {
         List<UserCourseRegistration> registrations = userCourseRegistrationService.getUserCourseRegistrationsByUserId(userId);
         return ResponseEntity.ok(registrations);
     }
 
+    @GetMapping("/course/{courseId}/user")
+    public ResponseEntity<List<UserCourseRegistration>> getUserCourseRegistrationsByCourse(@PathVariable Long courseId) {
+        List<UserCourseRegistration> registrations = userCourseRegistrationService.getUserCourseRegistrationsByCourseId(courseId);
+        return ResponseEntity.ok(registrations);
+    }
 
 }

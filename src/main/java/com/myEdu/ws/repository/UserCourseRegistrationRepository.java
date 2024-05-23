@@ -15,5 +15,7 @@ public interface UserCourseRegistrationRepository extends JpaRepository<UserCour
     boolean existsByUserUserIdAndCourseCourseId(Long userId, Long courseId);
 
     List<UserCourseRegistration> findByCourseCourseId(Long courseId);
+
+    void deleteByCourseCourseId(Long courseId);
 }
 

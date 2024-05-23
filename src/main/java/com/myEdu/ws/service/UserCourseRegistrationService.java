@@ -63,5 +63,14 @@ public class UserCourseRegistrationService {
     public List<UserCourseRegistration> getUserCourseRegistrationsByUserId(Long userId) {
         return userCourseRegistrationRepository.findByUserUserId(userId);
     }
+
+    public List<UserCourseRegistration> getUserCourseRegistrationsByCourseId(Long courseId) {
+        return userCourseRegistrationRepository.findByCourseCourseId(courseId);
+    }
+
+    @Transactional
+    public void deleteUserCourseRegistrationByCourseId(Long courseId) {
+        userCourseRegistrationRepository.deleteByCourseCourseId(courseId);
+    }
 }
 
