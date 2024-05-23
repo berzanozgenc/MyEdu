@@ -4,6 +4,7 @@ import com.myEdu.ws.model.Course;
 import com.myEdu.ws.model.Student;
 import com.myEdu.ws.model.StudentCourse;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +17,10 @@ public interface StudentCourseRepository extends JpaRepository<StudentCourse, Lo
     List<Student> findStudentsByCourseId(Long courseId);
 
     void deleteAllByStudentAndCourse(Student student, Course course);
+
+    @Modifying
+    @Query("DELETE FROM StudentCourse sc WHERE sc.course = :course")
+    void deleteAllByCourse(Course course);
 
     @Query("SELECT sc.course FROM StudentCourse sc WHERE sc.student= :student")
     List<Course> findCoursesByStudent(Student student);

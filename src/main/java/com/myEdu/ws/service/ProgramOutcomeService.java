@@ -8,6 +8,8 @@ import com.myEdu.ws.model.ProgramOutcome;
 import com.myEdu.ws.repository.CourseRepository;
 import com.myEdu.ws.repository.LearningOutcomeProgramOutcomeRepository;
 import com.myEdu.ws.repository.ProgramOutcomeRepository;
+import com.myEdu.ws.repository.StudentProgramOutcomeRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +24,16 @@ public class ProgramOutcomeService {
     private final LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository;
     private final CourseRepository courseRepository;
 
+    private  final StudentProgramOutcomeRepository studentProgramOutcomeRepository;
+
+
     @Autowired
-    public ProgramOutcomeService(ProgramOutcomeRepository programOutcomeRepository, ProgramOutcomeCalculationService programOutcomeCalculationService, LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository, CourseRepository courseRepository) {
+    public ProgramOutcomeService(ProgramOutcomeRepository programOutcomeRepository, ProgramOutcomeCalculationService programOutcomeCalculationService, LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository, CourseRepository courseRepository, StudentProgramOutcomeRepository studentProgramOutcomeRepository) {
         this.programOutcomeRepository = programOutcomeRepository;
         this.programOutcomeCalculationService = programOutcomeCalculationService;
         this.learningOutcomeProgramOutcomeRepository = learningOutcomeProgramOutcomeRepository;
         this.courseRepository = courseRepository;
+        this.studentProgramOutcomeRepository = studentProgramOutcomeRepository;
     }
 
     public void calculateAndSetProgramOutcomeTarget(Long id) {
@@ -78,12 +84,15 @@ public class ProgramOutcomeService {
         return programOutcomeRepository.save(existingProgramOutcome);
     }
 
+
     public ProgramOutcome findById(Long id) {
         return programOutcomeRepository.findById(id).orElse(null);
     }
 
-    // Program çıktısını sil
+    @Transactional
     public void deleteProgramOutcome(Long id) {
+        studentProgramOutcomeRepository.deleteAllByProgramOutcome(id);
+        learningOutcomeProgramOutcomeRepository.deleteAllByProgramOutcome(id);
         programOutcomeRepository.deleteById(id);
     }
 

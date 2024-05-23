@@ -3,8 +3,11 @@ package com.myEdu.ws.service;
 import com.myEdu.ws.dto.LearningOutcomeRequest;
 import com.myEdu.ws.model.Course;
 import com.myEdu.ws.model.LearningOutcome;
+import com.myEdu.ws.model.StudentLearningOutcome;
 import com.myEdu.ws.repository.CourseRepository;
+import com.myEdu.ws.repository.LearningOutcomeProgramOutcomeRepository;
 import com.myEdu.ws.repository.LearningOutcomeRepository;
+import com.myEdu.ws.repository.StudentLearningOutcomeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +25,12 @@ public class LearningOutcomeService {
 
     @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository;
+
+    @Autowired
+    StudentLearningOutcomeRepository studentLearningOutcomeRepository;
 
     public List<LearningOutcome> getAllLearningOutcomes() {
         return learningOutcomeRepository.findAll();
@@ -58,6 +67,8 @@ public class LearningOutcomeService {
     }
 
     public void deleteLearningOutcome(Long id) {
+        studentLearningOutcomeRepository.deleteAllByLearningOutcome(id);
+        learningOutcomeProgramOutcomeRepository.deleteAllByProgramOutcome(id);
         learningOutcomeRepository.deleteById(id);
     }
 }
