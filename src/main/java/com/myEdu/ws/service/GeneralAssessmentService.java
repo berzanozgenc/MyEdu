@@ -7,6 +7,7 @@ import com.myEdu.ws.repository.AssessmentRepository;
 import com.myEdu.ws.repository.CourseRepository;
 import com.myEdu.ws.repository.GeneralAssessmentRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -21,14 +22,12 @@ public class GeneralAssessmentService {
 
     private final AssessmentRepository assessmentRepository;
 
-    private final AssessmentService assessmentService;
 
     @Autowired
-    public GeneralAssessmentService(GeneralAssessmentRepository generalAssesmentRepository, CourseRepository courseRepository, AssessmentRepository assessmentRepository, AssessmentService assessmentService) {
+    public GeneralAssessmentService(GeneralAssessmentRepository generalAssesmentRepository, CourseRepository courseRepository, AssessmentRepository assessmentRepository) {
         this.generalAssesmentRepository = generalAssesmentRepository;
         this.courseRepository = courseRepository;
         this.assessmentRepository = assessmentRepository;
-        this.assessmentService = assessmentService;
     }
 
     private boolean isContributionUnderLimit(double totalContribution) {
@@ -54,12 +53,13 @@ public class GeneralAssessmentService {
         }
     }
 
+    @Transactional
     public void deleteGeneralAssesmentById(long generalAssesmentId) {
         try {
             Optional<GeneralAssessment> generalAssessment = generalAssesmentRepository.findById(generalAssesmentId);
             List<Assessment> assessments = assessmentRepository.findByGeneralAssessment(generalAssessment.get());
             for (Assessment assessment: assessments){
-                assessmentService.deleteAssessmentById(assessment.getAssessmentId());
+                assessmentRepository.deleteById(assessment.getAssessmentId());
             }
             generalAssesmentRepository.deleteById(generalAssesmentId);
         } catch (EmptyResultDataAccessException e) {
