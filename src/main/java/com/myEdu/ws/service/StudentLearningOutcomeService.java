@@ -64,7 +64,12 @@ public class StudentLearningOutcomeService {
             double Z = generalAssessment.getTotalContribution();
             double contributionPercentage = (assessment.getContribution() / X) * Y * (Z / 100);
             StudentAssessment studentAssessment = studentAssessmentRepository.findByStudentUserIdAndAssessmentAssessmentId(student.getUserId(), assessment.getAssessmentId());
-            double E = studentAssessment.getGrade();
+            double E;
+            if (studentAssessment != null) {
+                E = studentAssessment.getGrade();
+            } else {
+                E = 0.0; // veya istediğiniz bir varsayılan değeri atayabilirsiniz
+            }
             double F = assessment.getContribution();
             double scoreToAdd = E * contributionPercentage / F;
 
