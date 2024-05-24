@@ -76,8 +76,14 @@ public class CourseService {
         Course existingCourse = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("Course not found with id: " + courseId));
 
-        // Güncellenmiş verileri mevcut kursa kopyala
-        BeanUtils.copyProperties(updatedCourse, existingCourse, "courseId");
+        // Manuel olarak mevcut kursun özelliklerini güncelle
+        existingCourse.setCourseName(updatedCourse.getCourseName());
+        existingCourse.setDepartment(updatedCourse.getDepartment());
+        existingCourse.setCode(updatedCourse.getCode());
+        existingCourse.setSemester(updatedCourse.getSemester());
+        existingCourse.setSection(updatedCourse.getSection());
+        existingCourse.setEcts(updatedCourse.getEcts());
+        existingCourse.setCredit(updatedCourse.getCredit());
 
         // Kursu güncelle ve kaydet
         return courseRepository.save(existingCourse);
