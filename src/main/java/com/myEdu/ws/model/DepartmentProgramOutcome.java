@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProgramOutcome {
+public class DepartmentProgramOutcome {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,12 +38,7 @@ public class ProgramOutcome {
 
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "courseId")
-    private Course course;
-
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "departmentProgramOutcomeId")
-    private DepartmentProgramOutcome departmentProgramOutcome;
+    @JoinColumn(name = "departmentId")
+    private Department department;
 
 }

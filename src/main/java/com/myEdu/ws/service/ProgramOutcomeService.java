@@ -79,7 +79,6 @@ public class ProgramOutcomeService {
 
         existingProgramOutcome.setDescription(updatedProgramOutcome.getDescription());
         existingProgramOutcome.setNumber(updatedProgramOutcome.getNumber());
-        existingProgramOutcome.setDepartment(updatedProgramOutcome.getDepartment());
 
         return programOutcomeRepository.save(existingProgramOutcome);
     }
