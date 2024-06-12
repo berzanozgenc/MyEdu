@@ -24,9 +24,10 @@ public class StudentProgramOutcomeController {
    @Autowired
    private final StudentProgramOutcomeService studentProgramOutcomeService;
 
-    @PostMapping
+    @PostMapping("/{courseId}")
     public ResponseEntity<String> createStudentProgramOutcome(
-            @RequestBody StudentProgramOutcomeRequest request) {
+            @RequestBody StudentProgramOutcomeRequest request,
+            @PathVariable Long courseId) {
         boolean updated = false;
         boolean created = false;
         List<ProgramOutcome> programOutcomeList = request.getProgramOutcomeList();
@@ -34,12 +35,12 @@ public class StudentProgramOutcomeController {
         for (ProgramOutcome programOutcome : programOutcomeList){
             StudentProgramOutcome record = studentProgramOutcomeRepository.findByStudentUserIdAndProgramOutcomeId(student_id,programOutcome.getId());
             if(record == null){
-                String temp = studentProgramOutcomeService.createStudentProgramOutcome(student_id,programOutcome.getId());
+                String temp = studentProgramOutcomeService.createStudentProgramOutcome(student_id,programOutcome.getId(), courseId);
                 created = true;
                 updated = false;
             }
             else{
-                String temp = studentProgramOutcomeService.updateStudentProgramOutcome(student_id, programOutcome.getId());
+                String temp = studentProgramOutcomeService.updateStudentProgramOutcome(student_id, programOutcome.getId(), courseId);
                 updated = true;
                 created = false;
             }

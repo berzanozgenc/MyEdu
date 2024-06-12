@@ -38,11 +38,6 @@ public class CourseService {
     @Autowired
     LearningOutcomeService learningOutcomeService;
 
-    @Autowired
-    ProgramOutcomeRepository programOutcomeRepository;
-
-    @Autowired
-    ProgramOutcomeService programOutcomeService;
 
     private CourseRepository courseRepository;
 
@@ -100,10 +95,6 @@ public class CourseService {
         for (LearningOutcome learningOutcome : learningOutcomes){
             learningOutcomeService.deleteLearningOutcome(learningOutcome.getId());
         }
-        List<ProgramOutcome> programOutcomes = programOutcomeRepository.findByCourseCourseId(courseId);
-        for (ProgramOutcome programOutcome: programOutcomes){
-            programOutcomeService.deleteProgramOutcome(programOutcome.getId());
-        }
         studentCourseRepository.deleteAllByCourse(optional.get());
         userCourseRegistrationRepository.deleteByCourseCourseId(courseId);
         optional.ifPresent(course -> courseRepository.delete(course));
@@ -121,5 +112,10 @@ public class CourseService {
         }
         else
             return null;
+    }
+
+    public Department getDepartmentByCourse(Long courseId) {
+        Optional<Course> course = courseRepository.findById(courseId);
+        return course.get().getDepartment();
     }
 }

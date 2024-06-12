@@ -10,5 +10,6 @@ import java.util.List;
 
 @Repository
 public interface ProgramOutcomeRepository extends JpaRepository<ProgramOutcome, Long> {
-    public List<ProgramOutcome> findByCourseCourseId(Long courseId);
+
+    public List<ProgramOutcome> findByDepartmentId(Long departmentId);
 }

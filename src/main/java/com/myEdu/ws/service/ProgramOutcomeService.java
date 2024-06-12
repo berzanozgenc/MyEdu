@@ -1,14 +1,8 @@
 package com.myEdu.ws.service;
 
 import com.myEdu.ws.exception.NotFoundException;
-import com.myEdu.ws.model.Course;
-import com.myEdu.ws.model.LearningOutcome;
-import com.myEdu.ws.model.LearningOutcomeProgramOutcome;
-import com.myEdu.ws.model.ProgramOutcome;
-import com.myEdu.ws.repository.CourseRepository;
-import com.myEdu.ws.repository.LearningOutcomeProgramOutcomeRepository;
-import com.myEdu.ws.repository.ProgramOutcomeRepository;
-import com.myEdu.ws.repository.StudentProgramOutcomeRepository;
+import com.myEdu.ws.model.*;
+import com.myEdu.ws.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,22 +16,23 @@ public class ProgramOutcomeService {
     private final ProgramOutcomeRepository programOutcomeRepository;
     private final ProgramOutcomeCalculationService programOutcomeCalculationService;
     private final LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository;
-    private final CourseRepository courseRepository;
+
+    private final DepartmentRepository departmentRepository;
 
     private  final StudentProgramOutcomeRepository studentProgramOutcomeRepository;
 
 
     @Autowired
-    public ProgramOutcomeService(ProgramOutcomeRepository programOutcomeRepository, ProgramOutcomeCalculationService programOutcomeCalculationService, LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository, CourseRepository courseRepository, StudentProgramOutcomeRepository studentProgramOutcomeRepository) {
+    public ProgramOutcomeService(ProgramOutcomeRepository programOutcomeRepository, ProgramOutcomeCalculationService programOutcomeCalculationService, LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository, CourseRepository courseRepository, DepartmentRepository departmentRepository, StudentProgramOutcomeRepository studentProgramOutcomeRepository) {
         this.programOutcomeRepository = programOutcomeRepository;
         this.programOutcomeCalculationService = programOutcomeCalculationService;
         this.learningOutcomeProgramOutcomeRepository = learningOutcomeProgramOutcomeRepository;
-        this.courseRepository = courseRepository;
+        this.departmentRepository = departmentRepository;
         this.studentProgramOutcomeRepository = studentProgramOutcomeRepository;
     }
 
     public void calculateAndSetProgramOutcomeTarget(Long id) {
-        List<ProgramOutcome> programOutcomes = programOutcomeRepository.findByCourseCourseId(id);
+        List<ProgramOutcome> programOutcomes = programOutcomeRepository.findByDepartmentId(id);
         for (ProgramOutcome programOutcome : programOutcomes){
             double target = programOutcomeCalculationService.calculateProgramOutcomeTarget(programOutcome);
             programOutcome.setTarget(target);
@@ -45,8 +40,8 @@ public class ProgramOutcomeService {
         }
     }
 
-    public List<ProgramOutcome> getByCourseId(Long courseId) {
-        return programOutcomeRepository.findByCourseCourseId(courseId);
+    public List<ProgramOutcome> getByDepartmentId(Long departmentId) {
+        return programOutcomeRepository.findByDepartmentId(departmentId);
     }
 
 
@@ -61,10 +56,10 @@ public class ProgramOutcomeService {
     }
 
     // Yeni bir program çıktısı oluştur
-    public ProgramOutcome createProgramOutcome(ProgramOutcome programOutcome, Long courseId) {
-        Course course = courseRepository.findById(courseId).orElse(null);
-        if (course != null) {
-            programOutcome.setCourse(course);
+    public ProgramOutcome createProgramOutcome(ProgramOutcome programOutcome, Long departmentId) {
+        Department department = departmentRepository.findById(departmentId).orElse(null);
+        if (department != null) {
+            programOutcome.setDepartment(department);
             return programOutcomeRepository.save(programOutcome);
         } else {
             // Belirtilen courseId ile ders bulunamazsa veya null ise null dönebilir veya isteğe göre bir hata işleme stratejisi uygulanabilir
@@ -96,7 +91,7 @@ public class ProgramOutcomeService {
     }
 
     public void calculateAndSetAssessmentValueForProgramOutcome(Long id) {
-        List<ProgramOutcome> programOutcomes = programOutcomeRepository.findByCourseCourseId(id);
+        List<ProgramOutcome> programOutcomes = programOutcomeRepository.findByDepartmentId(id);
         for (ProgramOutcome programOutcome : programOutcomes){
             List<LearningOutcomeProgramOutcome> mappings = learningOutcomeProgramOutcomeRepository.findByProgramOutcome(programOutcome);
             double assessmentValue = 0.0;
@@ -113,7 +108,7 @@ public class ProgramOutcomeService {
     }
 
     public void calculateAndSetScoreAndLevelOfProvisionForProgramOutcome(Long id) {
-        List<ProgramOutcome> programOutcomes = programOutcomeRepository.findByCourseCourseId(id);
+        List<ProgramOutcome> programOutcomes = programOutcomeRepository.findByDepartmentId(id);
         for (ProgramOutcome programOutcome : programOutcomes){
             List<LearningOutcomeProgramOutcome> mappings = learningOutcomeProgramOutcomeRepository.findByProgramOutcome(programOutcome);
             double score = 0.0;

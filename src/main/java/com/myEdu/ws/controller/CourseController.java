@@ -3,6 +3,7 @@ package com.myEdu.ws.controller;
 import com.myEdu.ws.dto.CourseDto;
 import com.myEdu.ws.dto.CourseNameAndCodeDto;
 import com.myEdu.ws.model.Course;
+import com.myEdu.ws.model.Department;
 import com.myEdu.ws.repository.CourseRepository;
 import com.myEdu.ws.service.CourseService;
 import lombok.AllArgsConstructor;
@@ -57,6 +58,12 @@ public class CourseController {
     public ResponseEntity<String> createCourse(@RequestBody CourseDto courseDto) {
         Long idOfCreatedCourse = courseService.createCourse(courseDto);
         return new ResponseEntity<>(idOfCreatedCourse + " id' si ile ders oluşturuldu", HttpStatus.CREATED);
+    }
+
+    @GetMapping("/get-department/course/{courseId}")
+    public ResponseEntity<Department> getDepartmentByCourse(@PathVariable Long courseId) {
+      Department department = courseService.getDepartmentByCourse(courseId);
+        return new ResponseEntity<>(department, HttpStatus.OK);
     }
 
     @DeleteMapping("/{courseId}")

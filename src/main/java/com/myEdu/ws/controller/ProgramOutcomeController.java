@@ -1,12 +1,10 @@
 package com.myEdu.ws.controller;
 
 import com.myEdu.ws.model.Course;
+import com.myEdu.ws.model.Department;
 import com.myEdu.ws.model.LearningOutcome;
 import com.myEdu.ws.model.ProgramOutcome;
-import com.myEdu.ws.repository.CourseRepository;
-import com.myEdu.ws.repository.LearningOutcomeProgramOutcomeRepository;
-import com.myEdu.ws.repository.ProgramOutcomeRepository;
-import com.myEdu.ws.repository.StudentProgramOutcomeRepository;
+import com.myEdu.ws.repository.*;
 import com.myEdu.ws.service.LearningOutcomeProgramOutcomeService;
 import com.myEdu.ws.service.LearningOutcomeService;
 import com.myEdu.ws.service.ProgramOutcomeCalculationService;
@@ -32,31 +30,33 @@ public class ProgramOutcomeController {
 
     private final ProgramOutcomeRepository programOutcomeRepository;
 
+    private final DepartmentRepository departmentRepository;
+
     private final CourseRepository courseRepository;
 
     private final StudentProgramOutcomeRepository studentProgramOutcomeRepository;
 
     @Autowired
-    public ProgramOutcomeController(ProgramOutcomeCalculationService programOutcomeCalculationService, ProgramOutcomeService programOutcomeService, ProgramOutcomeRepository programOutcomeRepository, LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository, LearningOutcomeService learningOutcomeService, CourseRepository courseRepository, StudentProgramOutcomeRepository studentProgramOutcomeRepository) {
+    public ProgramOutcomeController(ProgramOutcomeCalculationService programOutcomeCalculationService, ProgramOutcomeService programOutcomeService, ProgramOutcomeRepository programOutcomeRepository, LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository, LearningOutcomeService learningOutcomeService, DepartmentRepository departmentRepository, CourseRepository courseRepository, StudentProgramOutcomeRepository studentProgramOutcomeRepository) {
         this.programOutcomeCalculationService = programOutcomeCalculationService;
         this.programOutcomeService = programOutcomeService;
         this.programOutcomeRepository = programOutcomeRepository;
         this.learningOutcomeProgramOutcomeRepository = learningOutcomeProgramOutcomeRepository;
         this.learningOutcomeService = learningOutcomeService;
+        this.departmentRepository = departmentRepository;
         this.courseRepository = courseRepository;
         this.studentProgramOutcomeRepository = studentProgramOutcomeRepository;
     }
 
-    // Tüm program çıktılarını getir
     @GetMapping
     public ResponseEntity<List<ProgramOutcome>> getAllProgramOutcomes() {
         List<ProgramOutcome> programOutcomes = programOutcomeService.getAllProgramOutcomes();
         return ResponseEntity.ok(programOutcomes);
     }
 
-    @GetMapping("/course/{courseId}")
-    public ResponseEntity<List<ProgramOutcome>> getProgramOutcomesByCourseId(@PathVariable Long courseId) {
-        List<ProgramOutcome> programOutcomes = programOutcomeService.getByCourseId(courseId);
+    @GetMapping("/department/{departmentId}")
+    public ResponseEntity<List<ProgramOutcome>> getProgramOutcomesByDepartmentId(@PathVariable Long departmentId) {
+        List<ProgramOutcome> programOutcomes = programOutcomeService.getByDepartmentId(departmentId);
         return ResponseEntity.ok().body(programOutcomes);
     }
 
@@ -68,9 +68,9 @@ public class ProgramOutcomeController {
     }
 
     // Yeni bir program çıktısı oluştur
-    @PostMapping("/{courseId}")
-    public ResponseEntity<ProgramOutcome> createProgramOutcome(@PathVariable Long courseId, @RequestBody ProgramOutcome programOutcome) {
-        ProgramOutcome createdProgramOutcome = programOutcomeService.createProgramOutcome(programOutcome, courseId);
+    @PostMapping("/{departmentId}")
+    public ResponseEntity<ProgramOutcome> createProgramOutcome(@PathVariable Long departmentId, @RequestBody ProgramOutcome programOutcome) {
+        ProgramOutcome createdProgramOutcome = programOutcomeService.createProgramOutcome(programOutcome, departmentId);
         if (createdProgramOutcome != null) {
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProgramOutcome);
         } else {
@@ -96,30 +96,30 @@ public class ProgramOutcomeController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("course/{id}/calculate-and-set-target")
+    @GetMapping("department/{id}/calculate-and-set-target")
     public ResponseEntity<String> calculateAndSetTarget(@PathVariable Long id) {
-        Optional<Course> course = courseRepository.findById(id);
-        programOutcomeService.calculateAndSetProgramOutcomeTarget(course.get().getCourseId());
+        Optional<Department> department = departmentRepository.findById(id);
+        programOutcomeService.calculateAndSetProgramOutcomeTarget(department.get().getId());
         return ResponseEntity.ok("Başarılı");
     }
 
-    @PutMapping("course/{id}/calculate-and-set-assessment-value")
+    @PutMapping("department/{id}/calculate-and-set-assessment-value")
     public ResponseEntity<String> calculateAndSetAssessmentValueForProgramOutcome(@PathVariable Long id) {
-        Course course = courseRepository.findById(id).orElse(null);
-        if (course == null) {
+        Department department = departmentRepository.findById(id).orElse(null);
+        if (department == null) {
             return ResponseEntity.notFound().build();
         }
-        programOutcomeService.calculateAndSetAssessmentValueForProgramOutcome(course.getCourseId());
+        programOutcomeService.calculateAndSetAssessmentValueForProgramOutcome(department.getId());
         return ResponseEntity.ok("Assessment value calculated and set successfully for ProgramOutcome with ID: " + id);
     }
 
-    @PostMapping("course/{id}/calculate-and-set-score-and-level-of-provision")
+    @PostMapping("department/{id}/calculate-and-set-score-and-level-of-provision")
     public ResponseEntity<String> calculateAndSetScoreAndLevelOfProvisionForProgramOutcome(@PathVariable Long id) {
-        Course course = courseRepository.findById(id).orElse(null);
-        if (course == null) {
+        Department department = departmentRepository.findById(id).orElse(null);
+        if (department == null) {
             return ResponseEntity.notFound().build();
         }
-        programOutcomeService.calculateAndSetScoreAndLevelOfProvisionForProgramOutcome(course.getCourseId());
+        programOutcomeService.calculateAndSetScoreAndLevelOfProvisionForProgramOutcome(department.getId());
         return ResponseEntity.ok("Score and level of provision calculated and set successfully for ProgramOutcome with ID: " + id);
     }
 

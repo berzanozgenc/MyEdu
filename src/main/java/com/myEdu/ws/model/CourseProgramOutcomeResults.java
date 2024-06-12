@@ -1,45 +1,39 @@
 package com.myEdu.ws.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
+@Table
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProgramOutcome {
+@Entity
+public class CourseProgramOutcomeResults {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String description;
-
-    @Column
-    private double number;
-
-    @Column(nullable = true)
-    private double target;
-
-    @Column(nullable = true)
-    private double assessmentValue;
-
-    @Column(nullable = true)
-    private double score;
-
-    @Column(nullable = true)
-    private double levelOfProvision;
+    @ManyToOne
+    private Course course;
 
     @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "departmentId")
-    private Department department;
+    private ProgramOutcome programOutcome;
 
+    @Column
+    private double target;
+
+    @Column
+    private double assessmentValue;
+
+    @Column
+    private double score;
+
+    @Column
+    private double levelOfProvision;
 
 }

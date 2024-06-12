@@ -23,12 +23,18 @@ public class StudentProgramOutcomeService {
     private final StudentProgramOutcomeRepository studentProgramOutcomeRepository;
 
     @Autowired
+    private final CourseProgramOutcomeResultsRepository courseProgramOutcomeResultsRepository;
+
+    @Autowired
+    private final CourseRepository courseRepository;
+
+    @Autowired
     private final LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository;
 
     @Autowired
     private final StudentLearningOutcomeRepository studentLearningOutcomeRepository;
 
-    public String createStudentProgramOutcome(Long userId, Long programOutcomeId) {
+    public String createStudentProgramOutcome(Long userId, Long programOutcomeId, Long courseId) {
         Student student = studentRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Student not found with id: " + userId));
         Optional<ProgramOutcome> programOutcomeOpt = programOutcomeRepository.findById(programOutcomeId);
@@ -37,29 +43,28 @@ public class StudentProgramOutcomeService {
         StudentProgramOutcome studentProgramOutcome = new StudentProgramOutcome();
         studentProgramOutcome.setStudent(student);
         studentProgramOutcome.setProgramOutcome(programOutcome);
-        levelOfProvision = calculateLevelOfProvision(student,programOutcome);
+        levelOfProvision = calculateLevelOfProvision(student,programOutcome, courseId);
         studentProgramOutcome.setLevelOfProvision(levelOfProvision);
         studentProgramOutcomeRepository.save(studentProgramOutcome);
-
         return ("Ok");
 
     }
 
-    public String updateStudentProgramOutcome(Long userId, Long programOutcomeId) {
+    public String updateStudentProgramOutcome(Long userId, Long programOutcomeId, Long courseId) {
         Student student = studentRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Student not found with id: " + userId));
         ProgramOutcome programOutcome = programOutcomeRepository.findById(programOutcomeId)
                 .orElseThrow(() -> new RuntimeException("Program Outcome not found with id: " + programOutcomeId));
 
         StudentProgramOutcome studentProgramOutcome = studentProgramOutcomeRepository.findByStudentUserIdAndProgramOutcomeId(userId,programOutcomeId);
-        double levelOfProvision = calculateLevelOfProvision(student, programOutcome);
+        double levelOfProvision = calculateLevelOfProvision(student, programOutcome, courseId);
         studentProgramOutcome.setLevelOfProvision(levelOfProvision);
         studentProgramOutcomeRepository.save(studentProgramOutcome);
 
         return "Ok";
     }
 
-    public double calculateLevelOfProvision(Student student, ProgramOutcome programOutcome) {
+    public double calculateLevelOfProvision(Student student, ProgramOutcome programOutcome, Long courseId) {
             List<LearningOutcomeProgramOutcome> mappings = learningOutcomeProgramOutcomeRepository.findByProgramOutcome(programOutcome);
             double score = 0.0;
             for (LearningOutcomeProgramOutcome mapping : mappings) {
@@ -70,7 +75,10 @@ public class StudentProgramOutcomeService {
                 double valueToAdd = (learningOutcomeScoreSum * contribution) / 100;
                 score += valueToAdd;
         }
-        return score / programOutcome.getAssessmentValue() * 100;
+            Optional<Course> course = courseRepository.findById(courseId);
+            Optional<CourseProgramOutcomeResults> courseProgramOutcomeResults = courseProgramOutcomeResultsRepository.findByCourseAndProgramOutcome(course.get(),programOutcome);
+
+        return score / courseProgramOutcomeResults.get().getAssessmentValue() * 100;
 
     }
 
