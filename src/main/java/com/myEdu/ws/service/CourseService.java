@@ -33,6 +33,9 @@ public class CourseService {
     GeneralAssessmentService generalAssessmentService;
 
     @Autowired
+    CourseProgramOutcomeResultsRepository courseProgramOutcomeResultsRepository;
+
+    @Autowired
     LearningOutcomeRepository learningOutcomeRepository;
 
     @Autowired
@@ -98,6 +101,7 @@ public class CourseService {
         studentCourseRepository.deleteAllByCourse(optional.get());
         userCourseRegistrationRepository.deleteByCourseCourseId(courseId);
         optional.ifPresent(course -> courseRepository.delete(course));
+        courseProgramOutcomeResultsRepository.deleteAllByCourse(courseId);
     }
 
     public List<Course> getAllCourses() {

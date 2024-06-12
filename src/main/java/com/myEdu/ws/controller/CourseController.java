@@ -20,7 +20,6 @@ import java.util.List;
 public class CourseController {
 
     private CourseService courseService;
-
     @GetMapping("/get-courses")
     public ResponseEntity<List<Course>> getAllCourses() {
         List<Course> courses = courseService.getAllCourses();
@@ -42,7 +41,6 @@ public class CourseController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
 
     @PutMapping("/{courseId}")
     public ResponseEntity<Course> updateCourse(@PathVariable Long courseId, @RequestBody Course updatedCourse) {

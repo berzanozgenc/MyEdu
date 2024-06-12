@@ -34,10 +34,12 @@ public class ProgramOutcomeController {
 
     private final CourseRepository courseRepository;
 
+    private final CourseProgramOutcomeResultsRepository courseProgramOutcomeResultsRepository;
+
     private final StudentProgramOutcomeRepository studentProgramOutcomeRepository;
 
     @Autowired
-    public ProgramOutcomeController(ProgramOutcomeCalculationService programOutcomeCalculationService, ProgramOutcomeService programOutcomeService, ProgramOutcomeRepository programOutcomeRepository, LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository, LearningOutcomeService learningOutcomeService, DepartmentRepository departmentRepository, CourseRepository courseRepository, StudentProgramOutcomeRepository studentProgramOutcomeRepository) {
+    public ProgramOutcomeController(ProgramOutcomeCalculationService programOutcomeCalculationService, ProgramOutcomeService programOutcomeService, ProgramOutcomeRepository programOutcomeRepository, LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository, LearningOutcomeService learningOutcomeService, DepartmentRepository departmentRepository, CourseRepository courseRepository, CourseProgramOutcomeResultsRepository courseProgramOutcomeResultsRepository, StudentProgramOutcomeRepository studentProgramOutcomeRepository) {
         this.programOutcomeCalculationService = programOutcomeCalculationService;
         this.programOutcomeService = programOutcomeService;
         this.programOutcomeRepository = programOutcomeRepository;
@@ -45,6 +47,7 @@ public class ProgramOutcomeController {
         this.learningOutcomeService = learningOutcomeService;
         this.departmentRepository = departmentRepository;
         this.courseRepository = courseRepository;
+        this.courseProgramOutcomeResultsRepository = courseProgramOutcomeResultsRepository;
         this.studentProgramOutcomeRepository = studentProgramOutcomeRepository;
     }
 
@@ -92,6 +95,7 @@ public class ProgramOutcomeController {
     public ResponseEntity<Void> deleteProgramOutcome(@PathVariable Long id) {
         learningOutcomeProgramOutcomeRepository.deleteAllByProgramOutcome(id);
         studentProgramOutcomeRepository.deleteAllByProgramOutcome(id);
+        courseProgramOutcomeResultsRepository.deleteAllByProgramOutcome(id);
         programOutcomeService.deleteProgramOutcome(id);
         return ResponseEntity.noContent().build();
     }
