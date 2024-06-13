@@ -24,18 +24,6 @@ public class ProgramOutcome {
     @Column
     private double number;
 
-    @Column(nullable = true)
-    private double target;
-
-    @Column(nullable = true)
-    private double assessmentValue;
-
-    @Column(nullable = true)
-    private double score;
-
-    @Column(nullable = true)
-    private double levelOfProvision;
-
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "departmentId")

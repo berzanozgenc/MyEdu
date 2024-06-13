@@ -100,31 +100,4 @@ public class ProgramOutcomeController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("department/{id}/calculate-and-set-target")
-    public ResponseEntity<String> calculateAndSetTarget(@PathVariable Long id) {
-        Optional<Department> department = departmentRepository.findById(id);
-        programOutcomeService.calculateAndSetProgramOutcomeTarget(department.get().getId());
-        return ResponseEntity.ok("Başarılı");
-    }
-
-    @PutMapping("department/{id}/calculate-and-set-assessment-value")
-    public ResponseEntity<String> calculateAndSetAssessmentValueForProgramOutcome(@PathVariable Long id) {
-        Department department = departmentRepository.findById(id).orElse(null);
-        if (department == null) {
-            return ResponseEntity.notFound().build();
-        }
-        programOutcomeService.calculateAndSetAssessmentValueForProgramOutcome(department.getId());
-        return ResponseEntity.ok("Assessment value calculated and set successfully for ProgramOutcome with ID: " + id);
-    }
-
-    @PostMapping("department/{id}/calculate-and-set-score-and-level-of-provision")
-    public ResponseEntity<String> calculateAndSetScoreAndLevelOfProvisionForProgramOutcome(@PathVariable Long id) {
-        Department department = departmentRepository.findById(id).orElse(null);
-        if (department == null) {
-            return ResponseEntity.notFound().build();
-        }
-        programOutcomeService.calculateAndSetScoreAndLevelOfProvisionForProgramOutcome(department.getId());
-        return ResponseEntity.ok("Score and level of provision calculated and set successfully for ProgramOutcome with ID: " + id);
-    }
-
 }
