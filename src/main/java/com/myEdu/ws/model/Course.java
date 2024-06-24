@@ -31,6 +31,9 @@ public class Course {
     @Column(nullable = false)
     private int credit;
 
+    @Column(nullable = true)
+    private String period;
+
     @Column(nullable = false)
     private String semester;
 

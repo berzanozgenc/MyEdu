@@ -16,6 +16,7 @@ public class CourseDto {
     private String code;
     private int ects;
     private int credit;
+    private String period;
     private int section;
     private Department department;
 }

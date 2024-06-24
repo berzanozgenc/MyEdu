@@ -53,6 +53,7 @@ public class CourseService {
         course.setSection(courseDto.getSection());
         course.setSemester(courseDto.getSemester());
         course.setDepartment(courseDto.getDepartment());
+        course.setPeriod(courseDto.getPeriod());
 
         GeneralAssessment generalAssessment = new GeneralAssessment();
         generalAssessment.setName("Quiz");
@@ -79,6 +80,7 @@ public class CourseService {
         existingCourse.setDepartment(updatedCourse.getDepartment());
         existingCourse.setCode(updatedCourse.getCode());
         existingCourse.setSemester(updatedCourse.getSemester());
+        existingCourse.setPeriod(updatedCourse.getPeriod());
         existingCourse.setSection(updatedCourse.getSection());
         existingCourse.setEcts(updatedCourse.getEcts());
         existingCourse.setCredit(updatedCourse.getCredit());
