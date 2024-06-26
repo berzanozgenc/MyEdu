@@ -12,12 +12,18 @@ import java.util.List;
 
 public interface StudentProgramOutcomeRepository extends JpaRepository<StudentProgramOutcome, Long> {
 
-    StudentProgramOutcome findByStudentUserIdAndProgramOutcomeId(Long userId, Long programId);
+    StudentProgramOutcome findByStudentUserIdAndProgramOutcomeIdAndCourseCourseId(Long userId, Long programId,Long courseId);
 
-    List<StudentProgramOutcome> findByStudentUserIdAndProgramOutcomeIdIn(Long userId, List<Long> programOutcomeIds);
+    List<StudentProgramOutcome> findByStudentUserIdAndCourseCourseIdAndProgramOutcomeIdIn(Long userId, Long courseId, List<Long> programOutcomeIds);
+
+    @Modifying
+    @Query("DELETE FROM StudentProgramOutcome WHERE course.courseId = :courseId")
+    void deleteAllByCourse(@Param("courseId") long courseId);
 
     @Modifying
     @Query("DELETE FROM StudentProgramOutcome WHERE programOutcome.id = :programOutcomeId")
     void deleteAllByProgramOutcome(@Param("programOutcomeId") long programOutcomeId);
+
+    List<StudentProgramOutcome> findByStudentUserIdAndProgramOutcomeId(Long studentId, Long programOutcomeId);
 
 }

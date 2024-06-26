@@ -31,7 +31,7 @@ public class LearningOutcomeProgramOutcomeController {
 
         LearningOutcomeProgramOutcome record = learningOutcomeProgramOutcomeService.getLearningProgramOutcome(request.getLearningOutcomeId(), request.getProgramOutcomeId());
         if(record == null) {
-            LearningOutcomeProgramOutcome relationship = learningOutcomeProgramOutcomeService.createRelationship(request.getLearningOutcomeId(), request.getProgramOutcomeId(), request.getContribution());
+            LearningOutcomeProgramOutcome relationship = learningOutcomeProgramOutcomeService.createRelationship(request.getLearningOutcomeId(), request.getProgramOutcomeId(), request.getContribution(), request.getCourseId());
             if (relationship != null) {
                 return ResponseEntity.status(HttpStatus.CREATED).body(relationship);
             } else {

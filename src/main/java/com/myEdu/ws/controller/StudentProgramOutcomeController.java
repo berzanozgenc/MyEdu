@@ -33,7 +33,7 @@ public class StudentProgramOutcomeController {
         List<ProgramOutcome> programOutcomeList = request.getProgramOutcomeList();
         Long student_id = request.getUserId();
         for (ProgramOutcome programOutcome : programOutcomeList){
-            StudentProgramOutcome record = studentProgramOutcomeRepository.findByStudentUserIdAndProgramOutcomeId(student_id,programOutcome.getId());
+            StudentProgramOutcome record = studentProgramOutcomeRepository.findByStudentUserIdAndProgramOutcomeIdAndCourseCourseId(student_id,programOutcome.getId(), courseId);
             if(record == null){
                 String temp = studentProgramOutcomeService.createStudentProgramOutcome(student_id,programOutcome.getId(), courseId);
                 created = true;
@@ -51,8 +51,15 @@ public class StudentProgramOutcomeController {
             return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("/user/{userId}/program-outcome")
-    public List<StudentProgramOutcome> getProgramOutcomesForUser(@PathVariable Long userId, @RequestBody List<Long> programOutcomeIds) {
-        return studentProgramOutcomeService.getByUserIdAndProgramOutcomeIds(userId, programOutcomeIds);
+    @PostMapping("/user/{userId}/course/{courseId}/program-outcome")
+    public List<StudentProgramOutcome> getProgramOutcomesForUser(@PathVariable Long userId, @PathVariable Long courseId, @RequestBody List<Long> programOutcomeIds) {
+        return studentProgramOutcomeService.getByUserIdAndProgramOutcomeIds(userId, courseId, programOutcomeIds);
+    }
+
+    @GetMapping("/getByStudentAndProgram/student/{studentId}/program/{programOutcomeId}")
+    public List<StudentProgramOutcome> getOutcomesByStudentAndProgramOutcome(
+            @PathVariable Long studentId,
+            @PathVariable Long programOutcomeId) {
+        return studentProgramOutcomeService.getOutcomesByStudentAndProgramOutcome(studentId, programOutcomeId);
     }
 }

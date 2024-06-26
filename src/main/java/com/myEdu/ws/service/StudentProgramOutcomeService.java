@@ -42,6 +42,8 @@ public class StudentProgramOutcomeService {
         double levelOfProvision = 0;
         StudentProgramOutcome studentProgramOutcome = new StudentProgramOutcome();
         studentProgramOutcome.setStudent(student);
+        Optional<Course> course = courseRepository.findById(courseId);
+        studentProgramOutcome.setCourse(course.get());
         studentProgramOutcome.setProgramOutcome(programOutcome);
         levelOfProvision = calculateLevelOfProvision(student,programOutcome, courseId);
         studentProgramOutcome.setLevelOfProvision(levelOfProvision);
@@ -56,7 +58,7 @@ public class StudentProgramOutcomeService {
         ProgramOutcome programOutcome = programOutcomeRepository.findById(programOutcomeId)
                 .orElseThrow(() -> new RuntimeException("Program Outcome not found with id: " + programOutcomeId));
 
-        StudentProgramOutcome studentProgramOutcome = studentProgramOutcomeRepository.findByStudentUserIdAndProgramOutcomeId(userId,programOutcomeId);
+        StudentProgramOutcome studentProgramOutcome = studentProgramOutcomeRepository.findByStudentUserIdAndProgramOutcomeIdAndCourseCourseId(userId,programOutcomeId, courseId);
         double levelOfProvision = calculateLevelOfProvision(student, programOutcome, courseId);
         studentProgramOutcome.setLevelOfProvision(levelOfProvision);
         studentProgramOutcomeRepository.save(studentProgramOutcome);
@@ -65,13 +67,14 @@ public class StudentProgramOutcomeService {
     }
 
     public double calculateLevelOfProvision(Student student, ProgramOutcome programOutcome, Long courseId) {
-            List<LearningOutcomeProgramOutcome> mappings = learningOutcomeProgramOutcomeRepository.findByProgramOutcome(programOutcome);
+        Course c = courseRepository.findById(courseId).orElse(null);
+            List<LearningOutcomeProgramOutcome> mappings = learningOutcomeProgramOutcomeRepository.findByProgramOutcomeAndCourse(programOutcome,c);
             double score = 0.0;
             for (LearningOutcomeProgramOutcome mapping : mappings) {
                 LearningOutcome learningOutcome = mapping.getLearningOutcome();
                 double contribution = mapping.getContribution();
                 StudentLearningOutcome studentLearningOutcome = studentLearningOutcomeRepository.findByStudentUserIdAndLearningOutcomeId(student.getUserId(),learningOutcome.getId());
-                double learningOutcomeScoreSum= studentLearningOutcome.getScoreSum();
+                double learningOutcomeScoreSum = studentLearningOutcome.getScoreSum();
                 double valueToAdd = (learningOutcomeScoreSum * contribution) / 100;
                 score += valueToAdd;
         }
@@ -82,8 +85,12 @@ public class StudentProgramOutcomeService {
 
     }
 
-    public List<StudentProgramOutcome> getByUserIdAndProgramOutcomeIds(Long userId, List<Long> programOutcomeIds) {
-        return studentProgramOutcomeRepository.findByStudentUserIdAndProgramOutcomeIdIn(userId, programOutcomeIds);
+    public List<StudentProgramOutcome> getByUserIdAndProgramOutcomeIds(Long userId, Long courseId, List<Long> programOutcomeIds) {
+        return studentProgramOutcomeRepository.findByStudentUserIdAndCourseCourseIdAndProgramOutcomeIdIn(userId, courseId, programOutcomeIds);
+    }
+
+    public List<StudentProgramOutcome> getOutcomesByStudentAndProgramOutcome(Long studentId, Long programOutcomeId) {
+        return studentProgramOutcomeRepository.findByStudentUserIdAndProgramOutcomeId(studentId, programOutcomeId);
     }
 
 }

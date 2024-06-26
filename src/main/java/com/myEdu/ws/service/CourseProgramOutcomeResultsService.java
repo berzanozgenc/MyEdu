@@ -49,12 +49,12 @@ public class CourseProgramOutcomeResultsService {
             }
             double target = programOutcomeCalculationService.calculateProgramOutcomeTarget(programOutcome);
             courseProgramOutcomeResults.setTarget(target);
-            calculateAndSetAssessmentValueForProgramOutcome(courseProgramOutcomeResults, programOutcome);
+            calculateAndSetAssessmentValueForProgramOutcome(courseProgramOutcomeResults, programOutcome, course);
         }
     }
 
-    public void calculateAndSetAssessmentValueForProgramOutcome(CourseProgramOutcomeResults courseProgramOutcomeResults, ProgramOutcome programOutcome) {
-        List<LearningOutcomeProgramOutcome> mappings = learningOutcomeProgramOutcomeRepository.findByProgramOutcome(programOutcome);
+    public void calculateAndSetAssessmentValueForProgramOutcome(CourseProgramOutcomeResults courseProgramOutcomeResults, ProgramOutcome programOutcome, Course course) {
+        List<LearningOutcomeProgramOutcome> mappings = learningOutcomeProgramOutcomeRepository.findByProgramOutcomeAndCourse(programOutcome, course);
         double assessmentValue = 0.0;
         for (LearningOutcomeProgramOutcome mapping : mappings) {
             LearningOutcome learningOutcome = mapping.getLearningOutcome();
@@ -64,11 +64,11 @@ public class CourseProgramOutcomeResultsService {
             assessmentValue += valueToAdd;
         }
         courseProgramOutcomeResults.setAssessmentValue(assessmentValue);
-        calculateAndSetScoreAndLevelOfProvisionForProgramOutcome(courseProgramOutcomeResults, programOutcome, assessmentValue);
+        calculateAndSetScoreAndLevelOfProvisionForProgramOutcome(courseProgramOutcomeResults, programOutcome, assessmentValue, course);
     }
 
-    public void calculateAndSetScoreAndLevelOfProvisionForProgramOutcome(CourseProgramOutcomeResults courseProgramOutcomeResults, ProgramOutcome programOutcome, double assessmentValue) {
-        List<LearningOutcomeProgramOutcome> mappings = learningOutcomeProgramOutcomeRepository.findByProgramOutcome(programOutcome);
+    public void calculateAndSetScoreAndLevelOfProvisionForProgramOutcome(CourseProgramOutcomeResults courseProgramOutcomeResults, ProgramOutcome programOutcome, double assessmentValue, Course course) {
+        List<LearningOutcomeProgramOutcome> mappings = learningOutcomeProgramOutcomeRepository.findByProgramOutcomeAndCourse(programOutcome, course);
         double score = 0.0;
         for (LearningOutcomeProgramOutcome mapping : mappings) {
             LearningOutcome learningOutcome = mapping.getLearningOutcome();

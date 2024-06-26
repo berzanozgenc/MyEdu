@@ -1,5 +1,6 @@
 package com.myEdu.ws.repository;
 
+import com.myEdu.ws.model.Course;
 import com.myEdu.ws.model.LearningOutcome;
 import com.myEdu.ws.model.LearningOutcomeProgramOutcome;
 import com.myEdu.ws.model.ProgramOutcome;
@@ -16,6 +17,11 @@ import java.util.Optional;
 public interface LearningOutcomeProgramOutcomeRepository extends JpaRepository  <LearningOutcomeProgramOutcome, Long> {
     Optional<LearningOutcomeProgramOutcome> findByLearningOutcomeIdAndProgramOutcomeId(Long learningOutcomeId, Long programOutcomeId);
     List<LearningOutcomeProgramOutcome> findByProgramOutcome(ProgramOutcome programOutcome);
+    List<LearningOutcomeProgramOutcome> findByProgramOutcomeAndCourse(ProgramOutcome programOutcome, Course course);
+
+    @Modifying
+    @Query("DELETE FROM CourseProgramOutcomeResults WHERE course.courseId = :courseId")
+    void deleteAllByCourse(@Param("courseId") long courseId);
 
     @Modifying
     @Query("DELETE FROM LearningOutcomeProgramOutcome WHERE programOutcome.id = :programOutcomeId")

@@ -66,9 +66,10 @@ public class LearningOutcomeService {
         return learningOutcomeRepository.save(existingLearningOutcome);
     }
 
+    @Transactional
     public void deleteLearningOutcome(Long id) {
         studentLearningOutcomeRepository.deleteAllByLearningOutcome(id);
-        learningOutcomeProgramOutcomeRepository.deleteAllByProgramOutcome(id);
+        learningOutcomeProgramOutcomeRepository.deleteAllByLearningOutcome(id);
         learningOutcomeRepository.deleteById(id);
     }
 }

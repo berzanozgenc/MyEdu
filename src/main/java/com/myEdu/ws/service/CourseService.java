@@ -18,6 +18,12 @@ import java.util.Optional;
 public class CourseService {
 
     @Autowired
+    StudentProgramOutcomeRepository studentProgramOutcomeRepository;
+
+    @Autowired
+    LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository;
+
+    @Autowired
     StudentCourseRepository studentCourseRepository;
 
     @Autowired
@@ -100,10 +106,12 @@ public class CourseService {
         for (LearningOutcome learningOutcome : learningOutcomes){
             learningOutcomeService.deleteLearningOutcome(learningOutcome.getId());
         }
+        studentProgramOutcomeRepository.deleteAllByCourse(courseId);
         studentCourseRepository.deleteAllByCourse(optional.get());
         userCourseRegistrationRepository.deleteByCourseCourseId(courseId);
         optional.ifPresent(course -> courseRepository.delete(course));
         courseProgramOutcomeResultsRepository.deleteAllByCourse(courseId);
+
     }
 
     public List<Course> getAllCourses() {

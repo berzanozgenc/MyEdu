@@ -33,5 +33,10 @@ public class LearningOutcomeProgramOutcome {
     @JoinColumn(name = "program_outcome_id", referencedColumnName = "id")
     private ProgramOutcome programOutcome;
 
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "courseId")
+    private Course course;
+
 }
 

@@ -27,7 +27,12 @@ public class StudentProgramOutcome {
     @JoinColumn(name = "program_outcome_id")
     private ProgramOutcome programOutcome;
 
+    @ManyToOne( cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "courseId")
+    private Course course;
+
     @Column(nullable = true)
     private double levelOfProvision;
+
 
 }

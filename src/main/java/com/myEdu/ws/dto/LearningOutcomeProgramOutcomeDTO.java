@@ -13,6 +13,7 @@ import lombok.Setter;
 public class LearningOutcomeProgramOutcomeDTO {
     private Long learningOutcomeId;
     private Long programOutcomeId;
+    private Long courseId;
     private double contribution;
 
 }
