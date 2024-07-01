@@ -60,6 +60,7 @@ public class CourseService {
         course.setSemester(courseDto.getSemester());
         course.setDepartment(courseDto.getDepartment());
         course.setPeriod(courseDto.getPeriod());
+        course.setEditable(true);
 
         GeneralAssessment generalAssessment = new GeneralAssessment();
         generalAssessment.setName("Quiz");
@@ -90,6 +91,7 @@ public class CourseService {
         existingCourse.setSection(updatedCourse.getSection());
         existingCourse.setEcts(updatedCourse.getEcts());
         existingCourse.setCredit(updatedCourse.getCredit());
+        existingCourse.setEditable(updatedCourse.isEditable());
 
         // Kursu güncelle ve kaydet
         return courseRepository.save(existingCourse);

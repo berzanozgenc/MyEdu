@@ -40,6 +40,9 @@ public class Course {
     @Column(nullable = false)
     private int section;
 
+    @Column
+    private boolean isEditable;
+
     @ManyToOne
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
