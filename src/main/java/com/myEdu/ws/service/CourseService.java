@@ -134,4 +134,8 @@ public class CourseService {
         Optional<Course> course = courseRepository.findById(courseId);
         return course.get().getDepartment();
     }
+
+    public List<Course> getCoursesByCode(String code) {
+        return courseRepository.findByCode(code);
+    }
 }

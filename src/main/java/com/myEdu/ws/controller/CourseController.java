@@ -42,6 +42,12 @@ public class CourseController {
         }
     }
 
+    @GetMapping("/code/{code}")
+    public ResponseEntity<List<Course>> getCoursesByCode(@PathVariable String code) {
+        List<Course> courses = courseService.getCoursesByCode(code);
+        return new ResponseEntity<>(courses, HttpStatus.OK);
+    }
+
     @PutMapping("/{courseId}")
     public ResponseEntity<Course> updateCourse(@PathVariable Long courseId, @RequestBody Course updatedCourse) {
         try {
