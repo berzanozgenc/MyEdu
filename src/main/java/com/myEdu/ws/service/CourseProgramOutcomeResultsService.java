@@ -87,4 +87,8 @@ public class CourseProgramOutcomeResultsService {
         return courseProgramOutcomeResultsRepository.findByCourseCourseId(courseId);
     }
 
+    public List<CourseProgramOutcomeResults> getByCourseCourseIdAndProgramOutcomeId(Long courseId, Long programOutcomeId) {
+        return courseProgramOutcomeResultsRepository.findByCourseCourseIdAndProgramOutcomeId(courseId, programOutcomeId);
+    }
+
 }

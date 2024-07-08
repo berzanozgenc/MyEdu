@@ -16,6 +16,8 @@ public interface CourseProgramOutcomeResultsRepository extends JpaRepository<Cou
 
     List<CourseProgramOutcomeResults> findByCourseCourseId(Long courseId);
 
+    List<CourseProgramOutcomeResults> findByCourseCourseIdAndProgramOutcomeId(Long courseId, Long programOutcomeId);
+
     @Modifying
     @Query("DELETE FROM CourseProgramOutcomeResults WHERE programOutcome.id = :programOutcomeId")
     void deleteAllByProgramOutcome(@Param("programOutcomeId") long programOutcomeId);

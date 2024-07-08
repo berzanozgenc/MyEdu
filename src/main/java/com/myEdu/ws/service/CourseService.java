@@ -138,4 +138,8 @@ public class CourseService {
     public List<Course> getCoursesByCode(String code) {
         return courseRepository.findByCode(code);
     }
+
+    public List<Course> findCoursesByPeriodAndDepartmentId(String period, Long departmentId) {
+        return courseRepository.findByPeriodAndDepartment_Id(period, departmentId);
+    }
 }

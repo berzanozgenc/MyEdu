@@ -70,6 +70,12 @@ public class CourseController {
         return new ResponseEntity<>(department, HttpStatus.OK);
     }
 
+    @GetMapping("/getByPeriodAndDepartmentId")
+    public List<Course> getCoursesByPeriodAndDepartmentId(@RequestParam String period, @RequestParam Long departmentId) {
+        return courseService.findCoursesByPeriodAndDepartmentId(period, departmentId);
+    }
+
+
     @DeleteMapping("/{courseId}")
     public void deleteCourse(@PathVariable Long courseId) {
         courseService.deleteCourse(courseId);

@@ -47,4 +47,9 @@ public class CourseProgramOutcomeResultsController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/course/{courseId}/program-outcome/{programId}")
+    public List<CourseProgramOutcomeResults> getResultsByCourseAndProgramOutcome(@PathVariable Long courseId, @PathVariable Long programId) {
+        return courseProgramOutcomeResultsService.getByCourseCourseIdAndProgramOutcomeId(courseId, programId);
+    }
 }
