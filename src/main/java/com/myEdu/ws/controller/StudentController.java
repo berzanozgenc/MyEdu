@@ -46,6 +46,12 @@ public class StudentController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping("/department/{id}")
+    public ResponseEntity<List<Student>> getStudentsByDepartmentId(@PathVariable Long id) {
+        List<Student> students = studentService.getStudentsByDepartmentId(id);
+        return new ResponseEntity<>(students, HttpStatus.OK);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
         studentService.deleteStudent(id);

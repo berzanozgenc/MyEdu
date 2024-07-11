@@ -47,7 +47,7 @@ public class CourseProgramOutcomeResultsService {
                 courseProgramOutcomeResults.setCourse(course);
                 courseProgramOutcomeResults.setProgramOutcome(programOutcome);
             }
-            double target = programOutcomeCalculationService.calculateProgramOutcomeTarget(programOutcome);
+            double target = programOutcomeCalculationService.calculateProgramOutcomeTarget(programOutcome, course);
             courseProgramOutcomeResults.setTarget(target);
             calculateAndSetAssessmentValueForProgramOutcome(courseProgramOutcomeResults, programOutcome, course);
         }

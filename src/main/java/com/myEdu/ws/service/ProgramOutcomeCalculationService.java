@@ -1,5 +1,6 @@
 package com.myEdu.ws.service;
 
+import com.myEdu.ws.model.Course;
 import com.myEdu.ws.model.LearningOutcome;
 import com.myEdu.ws.model.LearningOutcomeProgramOutcome;
 import com.myEdu.ws.model.ProgramOutcome;
@@ -17,8 +18,8 @@ public class ProgramOutcomeCalculationService {
     private final LearningOutcomeProgramOutcomeRepository learningOutcomeProgramOutcomeRepository;
 
     @Transactional(readOnly = true)
-    public double calculateProgramOutcomeTarget(ProgramOutcome programOutcome) {
-        List<LearningOutcomeProgramOutcome> mappings = learningOutcomeProgramOutcomeRepository.findByProgramOutcome(programOutcome);
+    public double calculateProgramOutcomeTarget(ProgramOutcome programOutcome, Course course) {
+        List<LearningOutcomeProgramOutcome> mappings = learningOutcomeProgramOutcomeRepository.findByProgramOutcomeAndCourse(programOutcome, course);
         double target = 0.0;
         for (LearningOutcomeProgramOutcome mapping : mappings) {
             LearningOutcome learningOutcome = mapping.getLearningOutcome();
