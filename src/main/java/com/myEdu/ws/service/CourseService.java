@@ -139,7 +139,7 @@ public class CourseService {
         return courseRepository.findByCode(code);
     }
 
-    public List<Course> findCoursesByPeriodAndDepartmentId(String period, Long departmentId) {
-        return courseRepository.findByPeriodAndDepartment_Id(period, departmentId);
+    public List<Course> findCoursesByPeriodAndDepartmentId(String period, Long departmentId, String semester) {
+        return courseRepository.findByPeriodAndDepartment_IdAndSemester(period, departmentId, semester);
     }
 }

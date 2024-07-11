@@ -70,9 +70,9 @@ public class CourseController {
         return new ResponseEntity<>(department, HttpStatus.OK);
     }
 
-    @GetMapping("/getByPeriodAndDepartmentId")
-    public List<Course> getCoursesByPeriodAndDepartmentId(@RequestParam String period, @RequestParam Long departmentId) {
-        return courseService.findCoursesByPeriodAndDepartmentId(period, departmentId);
+    @GetMapping("/getByPeriodAndDepartmentIdAndSemester")
+    public List<Course> getCoursesByPeriodAndDepartmentId(@RequestParam String period, @RequestParam Long departmentId, @RequestParam String semester ) {
+        return courseService.findCoursesByPeriodAndDepartmentId(period, departmentId, semester);
     }
 
 
