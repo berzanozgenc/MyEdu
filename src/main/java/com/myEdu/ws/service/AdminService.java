@@ -10,6 +10,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class AdminService {
@@ -35,4 +38,13 @@ public class AdminService {
         return adminRepository.save(admin);
     }
 
+    public List<Admin> getAllAdmins() {
+        List<Admin> admins = adminRepository.findAll();
+        return admins;
+    }
+
+    @Transactional
+    public void deleteAdmin(Admin admin) {
+        adminRepository.delete(admin);
+    }
 }
